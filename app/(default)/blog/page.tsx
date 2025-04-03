@@ -7,7 +7,7 @@ export const revalidate = 60;
 
 async function getTags() {
   // Fetch all unique tags
-  const { prisma } = await import('../../lib/prisma');
+  const { prisma } = await import('../../../lib/prisma');
   try {
     const tags = await prisma.tag.findMany({
       select: { name: true },
@@ -22,7 +22,7 @@ async function getTags() {
 
 // Accept searchQuery parameter
 async function getPosts(selectedTag?: string, searchQuery?: string) {
-  const { prisma } = await import('../../lib/prisma');
+  const { prisma } = await import('../../../lib/prisma');
   try {
     const whereClause: any = { published: true };
 

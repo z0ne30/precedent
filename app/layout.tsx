@@ -1,49 +1,34 @@
-'use client'; // Make it a client component
-
+// Reverted to Server Component
 import "./globals.css";
 import cx from "classnames";
 import { sfPro, inter } from "./fonts";
-import Footer from "@/components/layout/footer";
-import { Suspense } from "react";
+// Removed Footer, Suspense, Navbar imports
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
-import Navbar from "@/components/layout/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
-import { usePathname } from 'next/navigation'; // Import usePathname
+// Removed usePathname import
 
 export const metadata = {
-  title: "Precedent - Building blocks for your Next.js project",
-  description:
-    "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
-  metadataBase: new URL("https://precedent.dev"),
+  // TODO: Update with your actual project title
+  title: "My Custom Project",
+  // TODO: Update with your actual project description
+  description: "A description of my custom project.",
+  // TODO: Update with your actual deployment URL if applicable
+  // metadataBase: new URL("https://yourdomain.com"),
 };
 
-// Remove async as it's now a client component
+// Restore async if needed, but likely not required for this minimal layout
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isHomePage = pathname === '/';
+  // Removed pathname logic
   return (
     <ClerkProvider>
       <html lang="en">
+        {/* Minimal body, only applying fonts and rendering children + analytics */}
         <body className={cx(sfPro.variable, inter.variable)}>
-          {/* Conditionally render default layout elements */}
-          {!isHomePage && (
-            <>
-              <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
-              <Suspense fallback="...">
-                <Navbar />
-              </Suspense>
-              <main className="flex min-h-screen w-full flex-col items-center justify-center py-32">
-                {children}
-              </main>
-              <Footer />
-            </>
-          )}
-          {/* Render children directly for the home page */}
-          {isHomePage && children}
+          {children}
           <VercelAnalytics />
         </body>
       </html>
