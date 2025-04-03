@@ -26,3 +26,24 @@ model ContactSubmission {
   message   String
   createdAt DateTime @default(now()) // Track submission time
 }
+
+// Blog Models
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  posts Post[] // Relation to Post model (many-to-many)
+}
+
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique // For URL generation
+  content     String   // Assuming Markdown or rich text stored as string
+  published   Boolean  @default(false) // Default to unpublished
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tags        Tag[]    // Relation to Tag model (many-to-many)
+  // Optional: Add author relation later if needed
+  // author    User?    @relation(fields: [authorId], references: [id])
+  // authorId  Int?
+}

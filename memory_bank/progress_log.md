@@ -28,3 +28,25 @@
     *   Updated placeholder text (Brand Name, Tagline) and navigation links (GitHub, Project Site, Twitter) in `app/page.tsx` with provided details.
     *   Corrected background component import path in `app/page.tsx` to use relative path.
 *   **4/3/2025, 4:37:47 PM UTC** - **Meta:** Discussed timestamp issue in progress log. Switched logging method to use `apply_diff` for appending entries with actual timestamps.
+*   **4/3/2025, 4:40:05 PM UTC** - **Started Blog Implementation (Backend):**
+    *   Defined `Post` and `Tag` models with many-to-many relationship in `prisma/schema.prisma`.
+    *   Successfully ran `yarn prisma migrate dev --name add_blog_models`. Migration `20250403163930_add_blog_models` created and applied. Prisma Client regenerated.
+    *   Created API route `app/api/blog/route.ts` to fetch published posts.
+    *   Created dynamic API route `app/api/blog/[slug]/route.ts` to fetch a single published post by slug.
+    *   Ran `yarn prisma generate` again to attempt resolving persistent TS errors (likely editor/cache issue).
+*   **4/3/2025, 4:41:18 PM UTC** - **Continued Blog Implementation (Frontend):**
+    *   Created blog listing page component `app/blog/page.tsx` to fetch and display published posts.
+    *   Created dynamic single post page component `app/blog/[slug]/page.tsx` to fetch and display a post by slug. Noted persistent TS errors, likely editor/cache related.
+*   **4/3/2025, 4:54:40 PM UTC** - **Continued Blog Implementation (Seeding & Rendering):**
+    *   Confirmed `react-markdown` dependency exists.
+    *   Created Prisma seed script `prisma/seed.ts` with sample tags and posts.
+    *   Configured `package.json` for `prisma db seed` using `ts-node`.
+    *   Installed `ts-node` and `tsconfig-paths` dev dependencies.
+    *   Successfully executed `yarn prisma db seed`.
+    *   Added filter/search UI placeholders to `app/blog/page.tsx`.
+    *   Updated `app/blog/[slug]/page.tsx` to import and use `ReactMarkdown` for rendering post content.
+*   **4/3/2025, 4:57:21 PM UTC** - **Verified Blog Implementation (Basic):**
+    *   Attempted to fix server-side Prisma client resolution in `app/blog/page.tsx` by moving import into `getPosts` function.
+    *   Restarted `yarn dev` after `curl` connection refused.
+    *   Verified `/blog` page renders seeded post correctly using `curl`.
+    *   Verified `/blog/first-post` page renders seeded post content (via `ReactMarkdown`) correctly using `curl`.
