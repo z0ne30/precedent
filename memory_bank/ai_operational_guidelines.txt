@@ -2,3 +2,5 @@ After every 10 user queries, you must:
 1. Generate a concise summary encapsulating the primary changes, decisions, or code modifications discussed or implemented during the last 10 queries.
 2. Execute the command `git add .` in the associated project repository.
 3. Execute the command `git commit -m "Checkpoint [Query Count]: [Generated Summary]"`, where `[Query Count]` is the total query number (e.g., 10, 20, 30) and `[Generated Summary]` is the summary from step 1.
+
+Note: Due to operating within a GitHub Codespace environment, direct browser interaction (e.g., automatically opening websites or filling forms) is not possible without user assistance or specific port forwarding configurations managed by the user. Testing will rely on command-line tools like `curl` or manual user verification.

@@ -12,3 +12,13 @@
 *   **[Timestamp]** - **Completed Step C.9 (Create Test API Route):** Created `app/api/test-db/route.ts` with a GET handler to fetch users using the Prisma Client singleton.
 *   **[Timestamp]** - **Completed Step C.10 (Test API Route):** Successfully tested the `/api/test-db` endpoint using `curl http://localhost:3000/api/test-db`. Received `{"users":[]}` response, confirming database connection and Prisma setup.
 *   **[Timestamp]** - **Completed Prisma Integration:** All steps in `memory_bank/execution_plan.md` are complete.
+*   **[Timestamp]** - **Completed Landing Page / Contact Form Implementation:**
+    *   Added `ContactSubmission` model to `prisma/schema.prisma`.
+    *   Attempted migration with non-pooling URL (failed P1001).
+    *   Switched `DATABASE_URL` in `.env` to use direct connection string (`POSTGRES_URL`).
+    *   Successfully ran `yarn prisma migrate dev --name add_contact_submission`. Migration `20250403162453_add_contact_submission` created and applied.
+    *   Created contact form API route handler at `app/api/contact/route.ts`.
+    *   Ran `yarn prisma generate` explicitly to resolve TS error and update Prisma Client types.
+    *   Updated `app/page.tsx` to be a client component with state management and form submission logic targeting `/api/contact`.
+    *   Tested contact form submission using `curl` POST request to `/api/contact`; received success message.
+    *   Verified database entry by temporarily modifying `/api/test-db` to fetch submissions and confirming via `curl`; reverted `/api/test-db` afterwards.
