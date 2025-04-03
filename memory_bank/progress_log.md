@@ -58,3 +58,28 @@
     *   Updated `BlogPage` component to read `q` search param and pass to `getPosts`.
     *   Wrapped search/filter UI in a `<form>` for basic submission.
     *   Verified search works correctly using `curl` with `/blog?q=Markdown`.
+*   **4/3/2025, 5:07:42 PM UTC** - **Started Admin Section Setup (Auth):**
+    *   Reviewed Clerk setup in `app/layout.tsx` (ClerkProvider exists).
+    *   Updated `app/middleware.ts` to protect `/admin/**` routes using `auth().protect()`.
+    *   Noted Google provider needs configuration in Clerk dashboard (User Task).
+    *   Confirmed Sign-in/User buttons exist in `components/layout/navbar.tsx`.
+    *   Created basic placeholder page `app/admin/page.tsx`.
+*   **4/3/2025, 5:11:43 PM UTC** - **Continued Admin Section Setup (UI):**
+    *   Updated `app/admin/page.tsx` to fetch and display all posts (drafts and published) in a table.
+    *   Skipped manual verification of admin page access/display upon user request.
+*   **4/3/2025, 5:13:13 PM UTC** - **Implemented Admin Blog CRUD API:**
+    *   Created POST endpoint `app/api/admin/posts/route.ts` for creating posts (protected by Clerk auth).
+    *   Created dynamic route `app/api/admin/posts/[id]/route.ts` with PUT (update) and DELETE handlers (protected by Clerk auth).
+    *   Noted persistent Prisma Client TS errors.
+*   **4/3/2025, 5:14:58 PM UTC** - **Implemented Admin Create Post UI:**
+    *   Created client component `app/admin/posts/new/page.tsx` with form fields (title, slug, content, tags, published) and submission logic targeting `/api/admin/posts`.
+    *   Added "Create New Post" button/link to `app/admin/page.tsx`.
+*   **4/3/2025, 5:17:20 PM UTC** - **Implemented Admin Edit Post UI:**
+    *   Created server component `app/admin/posts/[id]/edit/page.tsx` to fetch post data.
+    *   Created client component `app/admin/posts/[id]/edit/EditPostForm.tsx` pre-filled with post data and logic to submit PUT requests.
+    *   Added "Edit" links to the post list table in `app/admin/page.tsx`.
+    *   Fixed/adjusted import paths and noted persistent TS errors.
+*   **4/3/2025, 5:18:31 PM UTC** - **Implemented Admin Delete Post UI:**
+    *   Created client component `app/admin/DeletePostButton.tsx` with confirmation dialog and DELETE request logic.
+    *   Integrated `DeletePostButton` into the post list table in `app/admin/page.tsx`.
+    *   Corrected import path for `DeletePostButton`.

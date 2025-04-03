@@ -1,7 +1,12 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
 
 // To learn more how to use clerkMiddleware to protect pages in your app, check out https://clerk.com/docs/references/nextjs/clerk-middleware
-export default clerkMiddleware()
+export default clerkMiddleware((auth, req) => {
+  // Restrict /admin routes to signed in users
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    auth().protect();
+  }
+});
 
 export const config = {
   matcher: [
