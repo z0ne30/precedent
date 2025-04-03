@@ -95,3 +95,5 @@
     *   Successfully ran `yarn build` locally (noted unusual terminal output markers).
     *   Successfully ran `yarn lint`. Pre-deployment checks passed.
 *   **4/3/2025, 5:51:20 PM UTC** - **Prepared for Deployment Retry:** Updated build script, fixed `generateStaticParams`, passed local build and lint checks.
+*   **4/3/2025, 6:01:48 PM UTC** - **Deployed to Production:** Successfully deployed project to Vercel using `vercel --prod`. Production URL: https://vibetest-gcnn02bhu-z0ne30-projects.vercel.app
+*   **4/3/2025, 6:24:41 PM UTC** - **Fixed Landing Page Layout:** Identified landing page content being constrained by default layout. Attempted route group fix (failed due to `mv` issues). Reverted `app/layout.tsx` and implemented conditional rendering of Navbar/Footer/main wrapper based on pathname using `usePathname`. Removed unused `app/(default)` directory attempt.

@@ -1,3 +1,5 @@
+'use client'; // Make it a client component
+
 import "./globals.css";
 import cx from "classnames";
 import { sfPro, inter } from "./fonts";
@@ -6,6 +8,7 @@ import { Suspense } from "react";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import Navbar from "@/components/layout/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import { usePathname } from 'next/navigation'; // Import usePathname
 
 export const metadata = {
   title: "Precedent - Building blocks for your Next.js project",
@@ -14,23 +17,33 @@ export const metadata = {
   metadataBase: new URL("https://precedent.dev"),
 };
 
-export default async function RootLayout({
+// Remove async as it's now a client component
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
   return (
     <ClerkProvider>
       <html lang="en">
         <body className={cx(sfPro.variable, inter.variable)}>
-          <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
-          <Suspense fallback="...">
-            <Navbar />
-          </Suspense>
-          <main className="flex min-h-screen w-full flex-col items-center justify-center py-32">
-            {children}
-          </main>
-          <Footer />
+          {/* Conditionally render default layout elements */}
+          {!isHomePage && (
+            <>
+              <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
+              <Suspense fallback="...">
+                <Navbar />
+              </Suspense>
+              <main className="flex min-h-screen w-full flex-col items-center justify-center py-32">
+                {children}
+              </main>
+              <Footer />
+            </>
+          )}
+          {/* Render children directly for the home page */}
+          {isHomePage && children}
           <VercelAnalytics />
         </body>
       </html>
