@@ -83,3 +83,10 @@
     *   Created client component `app/admin/DeletePostButton.tsx` with confirmation dialog and DELETE request logic.
     *   Integrated `DeletePostButton` into the post list table in `app/admin/page.tsx`.
     *   Corrected import path for `DeletePostButton`.
+*   **4/3/2025, 5:29:45 PM UTC** - **Implemented API Testing (Jest):**
+    *   Installed Jest, ts-jest, and related dev dependencies.
+    *   Configured Jest using `jest.config.js` and `jest.setup.js`.
+    *   Added `test` script to `package.json` (corrected comment syntax error).
+    *   Wrote basic Jest test suite `__tests__/api/blog.test.ts` for the public GET `/api/blog` endpoint, mocking Prisma client.
+    *   Fixed test assertion for error message logging.
+    *   Successfully ran tests using `yarn jest`.
