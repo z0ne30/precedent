@@ -1,0 +1,4 @@
+After every 10 user queries, you must:
+1. Generate a concise summary encapsulating the primary changes, decisions, or code modifications discussed or implemented during the last 10 queries.
+2. Execute the command `git add .` in the associated project repository.
+3. Execute the command `git commit -m "Checkpoint [Query Count]: [Generated Summary]"`, where `[Query Count]` is the total query number (e.g., 10, 20, 30) and `[Generated Summary]` is the summary from step 1.
