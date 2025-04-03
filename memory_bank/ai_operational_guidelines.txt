@@ -4,3 +4,10 @@ After every 10 user queries, you must:
 3. Execute the command `git commit -m "Checkpoint [Query Count]: [Generated Summary]"`, where `[Query Count]` is the total query number (e.g., 10, 20, 30) and `[Generated Summary]` is the summary from step 1.
 
 Note: Due to operating within a GitHub Codespace environment, direct browser interaction (e.g., automatically opening websites or filling forms) is not possible without user assistance or specific port forwarding configurations managed by the user. Testing will rely on command-line tools like `curl` or manual user verification.
+
+Pre-Deployment Checks:
+Before initiating a Vercel deployment (`vercel --prod`), the following steps must be completed successfully in order:
+1. Verify current changes using available testing methods within the Codespace (e.g., `curl`, `yarn test`).
+2. Execute `yarn build` locally and resolve any errors.
+3. Execute `yarn lint` (or the project's linting command) and resolve any errors/warnings.
+Only proceed to Vercel deployment if steps 1-3 pass without issues.

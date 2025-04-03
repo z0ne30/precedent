@@ -90,3 +90,7 @@
     *   Wrote basic Jest test suite `__tests__/api/blog.test.ts` for the public GET `/api/blog` endpoint, mocking Prisma client.
     *   Fixed test assertion for error message logging.
     *   Successfully ran tests using `yarn jest`.
+*   **4/3/2025, 5:46:15 PM UTC** - **Fixed Vercel Build Error & Ran Pre-deploy Checks:**
+    *   Updated `generateStaticParams` in `app/blog/[slug]/page.tsx` to dynamically import prisma client and explicitly disconnect, attempting to fix Vercel build error.
+    *   Successfully ran `yarn build` locally (noted unusual terminal output markers).
+    *   Successfully ran `yarn lint`. Pre-deployment checks passed.

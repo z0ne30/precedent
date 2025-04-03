@@ -34,13 +34,23 @@ async function getPost(slug: string) {
   }
 }
 
-// Optional: Generate static paths for better performance if needed
-// export async function generateStaticParams() {
-//   const posts = await prisma.post.findMany({ where: { published: true }, select: { slug: true } });
-//   return posts.map((post) => ({
-//     slug: post.slug,
-//   }));
-// }
+// Generate static paths for published posts
+export async function generateStaticParams() {
+  // Need to import prisma here as well if using alias/relative path issues persist
+  const { prisma } = await import('@/lib/prisma');
+  try {
+    const posts = await prisma.post.findMany({ where: { published: true }, select: { slug: true } });
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch (error) {
+    console.error("Failed to generate static params for blog slugs:", error);
+    return []; // Return empty array on error
+  } finally {
+    // Ensure disconnection in build environments
+    await prisma.$disconnect().catch(console.error);
+  }
+}
 
 export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPost(params.slug);
