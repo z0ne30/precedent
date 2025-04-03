@@ -50,3 +50,11 @@
     *   Restarted `yarn dev` after `curl` connection refused.
     *   Verified `/blog` page renders seeded post correctly using `curl`.
     *   Verified `/blog/first-post` page renders seeded post content (via `ReactMarkdown`) correctly using `curl`.
+*   **4/3/2025, 5:02:27 PM UTC** - **Implemented Blog Tag Filtering:**
+    *   Updated `app/blog/page.tsx` to fetch all tags, modify `getPosts` to accept a tag filter, and render tag links for filtering via URL search params.
+    *   Verified filtering works correctly using `curl` with `/blog?tag=Technology`.
+*   **4/3/2025, 5:04:38 PM UTC** - **Implemented Blog Search (Basic):**
+    *   Updated `getPosts` in `app/blog/page.tsx` to accept `searchQuery` and filter by title/content using Prisma `contains`.
+    *   Updated `BlogPage` component to read `q` search param and pass to `getPosts`.
+    *   Wrapped search/filter UI in a `<form>` for basic submission.
+    *   Verified search works correctly using `curl` with `/blog?q=Markdown`.

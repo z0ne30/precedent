@@ -5,12 +5,46 @@ import Link from 'next/link';
 // Or use on-demand revalidation later
 export const revalidate = 60;
 
-async function getPosts() {
-  // Import and instantiate prisma client within the function scope
+async function getTags() {
+  // Fetch all unique tags
   const { prisma } = await import('../../lib/prisma');
   try {
+    const tags = await prisma.tag.findMany({
+      select: { name: true },
+      orderBy: { name: 'asc' },
+    });
+    return tags;
+  } catch (error) {
+    console.error("Failed to fetch tags:", error);
+    return [];
+  }
+}
+
+// Accept searchQuery parameter
+async function getPosts(selectedTag?: string, searchQuery?: string) {
+  const { prisma } = await import('../../lib/prisma');
+  try {
+    const whereClause: any = { published: true };
+
+    // If a tag is selected, add it to the where clause
+    if (selectedTag) {
+      whereClause.tags = {
+        some: {
+          name: selectedTag,
+        },
+      };
+    }
+
+    // If a search query is provided, add OR condition for title/content
+    if (searchQuery) {
+      whereClause.OR = [
+        { title: { contains: searchQuery, mode: 'insensitive' } }, // Case-insensitive search
+        { content: { contains: searchQuery, mode: 'insensitive' } },
+      ];
+    }
+
     const posts = await prisma.post.findMany({
-      where: { published: true },
+      where: whereClause,
       orderBy: { createdAt: 'desc' },
       include: {
         tags: {
@@ -21,13 +55,23 @@ async function getPosts() {
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts for blog page:", error);
-    // Return empty array or handle error appropriately
     return [];
   }
 }
 
-export default async function BlogPage() {
-  const posts = await getPosts();
+// Update component signature to accept searchParams
+export default async function BlogPage({
+  searchParams,
+}: {
+  // Add 'q' for search query
+  searchParams?: { tag?: string; q?: string };
+}) {
+  const selectedTag = searchParams?.tag;
+  const searchQuery = searchParams?.q;
+  // Fetch posts based on selected tag and search query (if any)
+  const posts = await getPosts(selectedTag, searchQuery);
+  // Fetch all tags for the filter UI
+  const tags = await getTags();
 
   // TODO: Define colors consistent with landing page theme
   const backgroundColor = "bg-gray-900";
@@ -43,23 +87,55 @@ export default async function BlogPage() {
           Blog
         </h1>
 
-        {/* Filtering and Search UI Placeholders */}
-        <div className="mb-8 p-4 bg-gray-800 rounded-md flex flex-col md:flex-row gap-4 items-center">
-          <div className="flex-grow w-full md:w-auto">
-            <label htmlFor="search" className="sr-only">Search Posts</label>
-            <input
-              type="search"
-              id="search"
-              placeholder="Search posts..."
-              className="w-full px-3 py-2 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-              // TODO: Add state and onChange handler for search
-            />
+        {/* Wrap search and filters in a form */}
+        <form method="GET" action="/blog" className="mb-8 p-4 bg-gray-800 rounded-md flex flex-col md:flex-row gap-4 items-center justify-between">
+          {/* Hidden input to persist tag filter during search */}
+          {selectedTag && <input type="hidden" name="tag" value={selectedTag} />}
+
+          {/* Search Input and Button */}
+          <div className="flex-grow w-full md:w-1/2 flex gap-2">
+             <label htmlFor="search" className="sr-only">Search Posts</label>
+             <input
+               name="q" // Name attribute for form submission
+               type="search"
+               id="search"
+               placeholder="Search posts..."
+               defaultValue={searchQuery || ''} // Pre-fill from URL
+               className="w-full px-3 py-2 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+             />
+             <button type="submit" className={`px-4 py-2 ${tagColor} rounded-md hover:opacity-90 transition-opacity whitespace-nowrap`}>
+               Search
+             </button>
           </div>
-          <div className="text-gray-400 w-full md:w-auto text-center md:text-left">
-            [Tag Filtering Placeholder]
-            {/* TODO: Implement tag fetching and filtering UI */}
+
+          {/* Tag Filtering Links */}
+          <div className="flex flex-wrap gap-2 justify-center md:justify-end">
+             <Link
+               href="/blog"
+               className={`text-sm px-3 py-1 rounded-full transition-colors ${
+                 !selectedTag
+                   ? 'bg-teal-500 text-white'
+                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+               }`}
+             >
+               All Posts
+             </Link>
+            {tags.map((tag) => (
+              <Link
+                key={tag.name}
+                // Preserve search query when clicking tags if needed, or clear it
+                href={`/blog?tag=${encodeURIComponent(tag.name)}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ''}`}
+                className={`text-sm px-3 py-1 rounded-full transition-colors ${
+                  selectedTag === tag.name
+                    ? 'bg-teal-500 text-white' // Active tag style
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600' // Inactive tag style
+                }`}
+              >
+                {tag.name}
+              </Link>
+            ))}
           </div>
-        </div>
+        </form> {/* End of form */}
 
         {/* Posts List */}
         <div className="space-y-6">
