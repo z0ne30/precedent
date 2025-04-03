@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, FormEvent } from 'react'; // Import useState and FormEvent
+import BackgroundSVG from './components/background'; // Import the background SVG component using relative path
 
 export default function Home() {
   // State for form fields
@@ -60,26 +61,22 @@ export default function Home() {
   };
 
   return (
-    <div className={`flex min-h-screen flex-col items-center justify-center ${backgroundColor} ${primaryTextColor} p-8`}>
+    <div className={`relative flex min-h-screen flex-col items-center justify-center ${backgroundColor} ${primaryTextColor} p-8 overflow-hidden`}> {/* Added relative and overflow-hidden */}
+      <BackgroundSVG /> {/* Render the background SVG */}
       {/* Main Content Area */}
       <div className="z-10 w-full max-w-4xl text-center">
-        {/* TODO: Update Your Name / Brand */}
         <h1 className={`text-4xl md:text-6xl font-bold mb-4 ${accentColor}`}>
-          Your Name / Brand
+          My Portfolio
         </h1>
-        {/* TODO: Update Tagline */}
         <p className="text-lg md:text-xl mb-8 text-gray-300">
-          Short tagline or introduction about yourself or your work. Modern, tech-focused.
+          Exploring technology and creativity.
         </p>
 
         {/* Navigation Links */}
         <nav className="mb-12 flex justify-center space-x-4 md:space-x-6">
-          {/* TODO: Update GitHub URL */}
-          <a href="YOUR_GITHUB_URL" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>GitHub</a>
-          {/* TODO: Update Project Site URL */}
-          <a href="YOUR_PROJECT_SITE_URL" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>Project Site</a>
-          {/* TODO: Update Twitter URL */}
-          <a href="YOUR_TWITTER_URL" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>Twitter</a>
+          <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>GitHub</a>
+          <a href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>Project Site</a>
+          <a href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>Twitter</a>
           <Link href="/blog" className={`hover:text-teal-300 transition-colors`}>Blog</Link>
         </nav>
 
