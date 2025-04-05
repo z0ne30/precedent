@@ -5,75 +5,14 @@ import { useState, useEffect } from 'react'; // Add useState, useEffect
 // Removed duplicate Link import
 import { motion } from 'framer-motion'; // Remove AnimatePresence import
 import BackgroundSVG from './components/background'; // Import the background SVG component using relative path
-// import ScramblingText from './components/ScramblingText'; // TEMP: Comment out
+// Import ScramblingText dynamically
+import dynamic from 'next/dynamic';
+const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ssr: false });
 
 export default function Home() {
   // State for cycling text
   const subtitles = ["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"];
-  const [subtitleIndex, setSubtitleIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState(subtitles[0]); // State for displayed text
-  const interval = 3000; // ms
-
-  // Effect to cycle through subtitles
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSubtitleIndex((prevIndex) => (prevIndex + 1) % subtitles.length);
-    }, interval);
-    return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subtitles.length, interval]); // Dependencies for cycling
-
-  // Effect for scrambling animation
-  useEffect(() => {
-    const targetText = subtitles[subtitleIndex];
-    let currentText = displayedText;
-    // let animationFrameId: number; // Removed unused variable
-    let scrambleIntervalId: NodeJS.Timeout | null = null;
-    const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()';
-    const scrambleSpeed = 80; // ms between character updates
-    const revealSpeed = 1; // How many correct chars to reveal per interval
-
-    const updateText = () => {
-      let nextText = '';
-      let correctCharsCount = 0;
-      for (let i = 0; i < targetText.length; i++) {
-        if (i < currentText.length && currentText[i] === targetText[i]) {
-           correctCharsCount++;
-        }
-        // Decide if char should be correct or scrambled
-        const shouldBeCorrect = correctCharsCount >= i - revealSpeed; // Reveal progressively
-
-        if (shouldBeCorrect && i < targetText.length) {
-          nextText += targetText[i];
-        } else {
-          nextText += scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-        }
-      }
-       // Trim or pad if lengths differ significantly during transition (optional)
-       if (nextText.length > targetText.length) {
-           nextText = nextText.slice(0, targetText.length);
-       }
-
-      setDisplayedText(nextText);
-      currentText = nextText; // Update currentText for next iteration
-
-      if (nextText === targetText) {
-        if (scrambleIntervalId) clearInterval(scrambleIntervalId);
-      }
-    };
-
-    // Clear previous interval if index changes quickly
-    if (scrambleIntervalId) clearInterval(scrambleIntervalId);
-    scrambleIntervalId = setInterval(updateText, scrambleSpeed);
-
-    // Cleanup function
-    return () => {
-      if (scrambleIntervalId) clearInterval(scrambleIntervalId);
-      // if (animationFrameId) cancelAnimationFrame(animationFrameId); // Removed line using unassigned variable
-    };
-    // Run when target text changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subtitleIndex, subtitles]);
+  // Removed manual scramble state and effects
 
   // Define colors
   const backgroundColor = "bg-gray-900";
@@ -119,14 +58,16 @@ export default function Home() {
 
       {/* Main Content Area - Animated */}
       <motion.div
-        className="z-10 w-full max-w-4xl text-center"
+        className="z-10 w-full max-w-5xl text-center"
+        // Increased max-width
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Heading */}
         <motion.h1
-          className={`font-orbitron text-4xl md:text-6xl font-bold mb-8 ${accentColor}`}
+          className={`font-orbitron text-4xl md:text-8xl font-bold mb-12 ${accentColor}`}
+          // Increased size and margin
           variants={itemVariants}
         >
           Enyu Rao
@@ -134,19 +75,18 @@ export default function Home() {
 
         {/* Animated Subtitle */}
         {/* Wrapper div for fixed height and overflow hidden */}
-        <motion.div
-          variants={itemVariants} // Still use itemVariants for initial entrance
-          className="h-8 md:h-10 mb-16" // Keep wrapper for height consistency, remove overflow
-        >
-          {/* Render the displayedText state */}
-          <span className="text-lg md:text-xl text-gray-300">
-            {displayedText}
-          </span>
+        {/* Animated Subtitle using ScramblingText component */}
+        <motion.div variants={itemVariants}> {/* Wrapper for entrance animation */}
+          <ScramblingText
+            texts={["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"]}
+            interval={3000} // Change text every 3 seconds
+            className="text-lg md:text-xl mb-20 text-gray-300" // Apply styling
+          />
         </motion.div>
 
         {/* Navigation Links */}
         <motion.nav
-          className="mb-16 flex justify-center space-x-4 md:space-x-6" // Increased margin
+          className="mb-20 flex justify-center space-x-4 md:space-x-6" // Increased margin
           variants={itemVariants}
         >
           {/* Added back missing links and removed magnetic attributes */}

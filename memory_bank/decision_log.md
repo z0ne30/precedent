@@ -21,3 +21,7 @@
 *   **4/5/2025, 2:15:10 AM UTC** - **Decision:** Remove magnetic dot snapping effect from custom cursor. **Reason:** User request to simplify cursor interaction.
 *   **4/5/2025, 2:30:40 AM UTC** - **Decision:** Change landing page heading font to Orbitron and increase element spacing. **Reason:** User request for a more futuristic look and spacious layout.
 *   **4/5/2025, 2:48:03 AM UTC** - **Decision:** Implement manual text scramble animation for landing page subtitle. **Reason:** User preferred scramble effect, but libraries (`react-scramble`, `use-scramble`) caused build errors/incompatibility. Manual implementation avoids external dependencies.
+*   **4/5/2025, 2:55:27 AM UTC** - **Decision:** Increase landing page heading size, vertical spacing, and max content width. **Reason:** User request to improve layout and better utilize landscape space.
+*   **4/5/2025, 2:59:00 AM UTC** - **Decision:** Revert to using `use-scramble` library for text animation. **Reason:** User preference, despite previous build errors encountered with this library.
+*   **4/5/2025, 2:50:40 AM UTC** - **Decision:** Add `deploy:prod` script to `package.json`. **Reason:** User request to add a shortcut for the `vercel --prod` command.
+*   **4/5/2025, 1:40:32 PM UTC** - **Decision:** Fixed JSX syntax errors in `app/page.tsx` by moving misplaced comments outside `className` attributes. **Reason:** Comments placed directly within JSX attribute strings (`{/* ... */}`) caused parsing errors (`Unexpected token 'div'. Expected jsx identifier`).
