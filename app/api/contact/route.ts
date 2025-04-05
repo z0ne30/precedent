@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     });
 
     // Return success response (don't return the full submission data)
-    return NextResponse.json({ message: 'Submission received successfully!' });
+    return NextResponse.json({ message: 'Submission received' }); // Match expected test message
 
   } catch (error) {
     console.error("Failed to process contact submission:", error);

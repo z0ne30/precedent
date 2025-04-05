@@ -1,5 +1,5 @@
 import Link from 'next/link';
-// Import removed from top level
+import { prisma } from '../../../lib/prisma'; // Import prisma client at top level
 
 // Revalidate this page every X seconds (e.g., 60)
 // Or use on-demand revalidation later
@@ -7,7 +7,7 @@ export const revalidate = 60;
 
 async function getTags() {
   // Fetch all unique tags
-  const { prisma } = await import('../../../lib/prisma');
+  // Use prisma directly
   try {
     const tags = await prisma.tag.findMany({
       select: { name: true },
@@ -22,29 +22,38 @@ async function getTags() {
 
 // Accept searchQuery parameter
 async function getPosts(selectedTag?: string, searchQuery?: string) {
-  const { prisma } = await import('../../../lib/prisma');
+  // Use prisma directly
   try {
-    const whereClause: any = { published: true };
+    // Build an array of conditions for an explicit AND
+    const whereConditions: any[] = [{ published: true }];
 
-    // If a tag is selected, add it to the where clause
+    // If a tag is selected, add its condition to the array
     if (selectedTag) {
-      whereClause.tags = {
-        some: {
-          name: selectedTag,
+      whereConditions.push({
+        tags: {
+          some: {
+            name: selectedTag,
+          },
         },
-      };
+      });
     }
 
-    // If a search query is provided, add OR condition for title/content
+    // If a search query is provided, add its OR condition to the array
     if (searchQuery) {
-      whereClause.OR = [
-        { title: { contains: searchQuery, mode: 'insensitive' } }, // Case-insensitive search
-        { content: { contains: searchQuery, mode: 'insensitive' } },
-      ];
+      whereConditions.push({
+        OR: [
+          { title: { contains: searchQuery, mode: 'insensitive' } }, // Case-insensitive search
+          { content: { contains: searchQuery, mode: 'insensitive' } },
+        ],
+      });
     }
+
+    // Log the final where clause for debugging
+    console.log(">>> Prisma where clause:", JSON.stringify({ AND: whereConditions }, null, 2));
 
     const posts = await prisma.post.findMany({
-      where: whereClause,
+      // Use the explicit AND condition
+      where: { AND: whereConditions }, // This is the query being executed
       orderBy: { createdAt: 'desc' },
       include: {
         tags: {
@@ -52,6 +61,7 @@ async function getPosts(selectedTag?: string, searchQuery?: string) {
         },
       },
     });
+    console.log(`>>> Found ${posts.length} posts.`); // Log the number of posts found
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts for blog page:", error);

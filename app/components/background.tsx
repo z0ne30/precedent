@@ -12,7 +12,7 @@ const BackgroundSVG = () => (
       top: 0,
       left: 0,
       zIndex: -1, // Ensure it's behind content
-      opacity: 0.1, // Make it subtle
+      opacity: 0.3, // Increased root opacity
     }}
   >
     <defs>
@@ -30,13 +30,13 @@ const BackgroundSVG = () => (
     </defs>
 
     {/* Subtle grid lines - Kept original grid for structure */}
-    <g opacity="0.3"> {/* Increased grid opacity slightly */}
+    <g opacity="0.4"> {/* Increased grid opacity more */}
       <path d="M0 100 H1200 M0 200 H1200 M0 300 H1200 M0 400 H1200 M0 500 H1200 M0 600 H1200 M0 700 H1200" stroke="#FFFFFF" strokeWidth="0.5" />
       <path d="M100 0 V800 M200 0 V800 M300 0 V800 M400 0 V800 M500 0 V800 M600 0 V800 M700 0 V800 M800 0 V800 M900 0 V800 M1000 0 V800 M1100 0 V800" stroke="#FFFFFF" strokeWidth="0.5" />
     </g>
 
     {/* Interconnected Lines Network */}
-    <g opacity="0.5" stroke="url(#tealGradient)" strokeWidth="1"> {/* Increased line opacity */}
+    <g opacity="0.6" stroke="url(#tealGradient)" strokeWidth="1"> {/* Increased line opacity more */}
       {/* Lines remain the same as generated */}
       <line x1="50" y1="50" x2="300" y2="400" />
       <line x1="300" y1="400" x2="150" y2="700" />
@@ -61,7 +61,7 @@ const BackgroundSVG = () => (
     </g>
 
     {/* Glowing Nodes */}
-    <g fill="#14b8a6" filter="url(#glow)" opacity="0.7"> {/* Increased node opacity */}
+    <g fill="#14b8a6" filter="url(#glow)" opacity="0.8"> {/* Increased node opacity more */}
       {/* Nodes remain the same */}
       <circle cx="50" cy="50" r="4" />
       <circle cx="300" cy="400" r="5" />

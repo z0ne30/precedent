@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { UserButton } from '@clerk/nextjs';
-import { prisma } from '../../../lib/prisma'; // Import prisma client
+import { prisma } from '../../lib/prisma'; // Corrected import path after moving admin dir
 import DeletePostButton from './DeletePostButton'; // Correct relative path
 
 // TODO: Define colors consistent with theme

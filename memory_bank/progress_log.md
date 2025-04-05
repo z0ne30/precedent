@@ -100,3 +100,16 @@
 *   **4/3/2025, 6:27:31 PM UTC** - **Prepared for Deployment Retry (Attempt 2):** User confirmed Vercel environment variables (incl. direct DB URL) are correct and Vercel build command override set to `prisma generate && yarn build`.
 *   **4/3/2025, 7:01:59 PM UTC** - **Cleaned Up Template Files:** Identified template files vs custom additions using timestamps. Removed unused template directories (`components/home`, `components/layout`, `components/shared`) and assets (`public/clerk.svg`, `next.svg`, etc.), and `app/sitemap.ts`. Fixed resulting import errors for Navbar/Footer in `app/(default)/layout.tsx`. Updated metadata placeholders in `app/layout.tsx`.
 *   **4/3/2025, 7:05:27 PM UTC** - **Fixed Admin Layout:** Resolved issue where `/admin` page content was obscured/centered by removing the fixed background div and centering styles from the `<main>` wrapper in `app/(default)/layout.tsx`.
+*   **4/5/2025, 1:30:12 AM UTC** - **Completed Application Testing & Bug Fixes:**
+    *   Performed comprehensive `curl` testing of landing page, blog (list, single, filter, search, edge cases), APIs (blog, contact, test-db), and admin access.
+    *   Identified and fixed bug in blog filtering/search logic (`app/(default)/blog/page.tsx`) where "no results" cases incorrectly showed all posts. Confirmed fix via logs.
+    *   Identified and fixed bug in contact form API (`app/api/contact/route.ts`) where the success message didn't match test expectations. Confirmed fix via `curl`.
+    *   Identified critical issue: Clerk middleware (`app/middleware.ts`) is not protecting `/admin` routes despite extensive debugging attempts (multiple configurations, env checks, restarts, logging). Admin protection remains unresolved.
+*   **4/5/2025, 1:35:01 AM UTC** - **Refactored Contact Form:**
+    *   Extracted contact form from `app/page.tsx` into `app/components/ContactForm.tsx`.
+    *   Created new contact page `app/contact/page.tsx` using the component.
+    *   Updated `app/page.tsx` to remove form and link to `/contact`.
+*   **4/5/2025, 1:43:30 AM UTC** - **Enhanced Landing Page Visuals:**
+    *   Increased opacity in `app/components/background.tsx` to make background SVG visible.
+    *   Added Tailwind hover effects (scale, shadow) to links/button in `app/page.tsx`.
+    *   Added Framer Motion entrance animations (staggered fade-in/slide-up) to content in `app/page.tsx`.

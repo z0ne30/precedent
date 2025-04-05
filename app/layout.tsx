@@ -8,10 +8,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 // Removed usePathname import
 
 export const metadata = {
-  // TODO: Update with your actual project title
-  title: "My Custom Project",
-  // TODO: Update with your actual project description
-  description: "A description of my custom project.",
+  // Updated project title based on spec
+  title: "Personal Website & Blog",
+  // Updated project description based on spec
+  description: "A personal website featuring a landing page and integrated blog.",
   // TODO: Update with your actual deployment URL if applicable
   // metadataBase: new URL("https://yourdomain.com"),
 };

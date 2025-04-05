@@ -1,143 +1,88 @@
 'use client'; // Make this a client component
 
 import Link from "next/link";
-import { useState, FormEvent } from 'react'; // Import useState and FormEvent
+// Removed useState, FormEvent imports as form is moved
+import { motion } from 'framer-motion'; // Import motion
 import BackgroundSVG from './components/background'; // Import the background SVG component using relative path
 
 export default function Home() {
-  // State for form fields
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  // Removed form state variables
 
-  // State for submission status and feedback
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [feedbackMessage, setFeedbackMessage] = useState('');
-
-  // TODO: Replace with actual abstract vector graphic as subtle background
-  // For now, using a dark background color based on the spec.
+  // Define colors (can be simplified if not needed for other elements)
   const backgroundColor = "bg-gray-900"; // Example dark grey
   const primaryTextColor = "text-white";
   const accentColor = "text-teal-400"; // Example teal
-  const buttonBgColor = "bg-teal-600";
-  const buttonHoverBgColor = "hover:bg-teal-700";
-  const inputBgColor = "bg-gray-800";
-  const inputBorderColor = "border-gray-700";
-  const successColor = "text-green-400";
-  const errorColor = "text-red-400";
+  // Removed unused button/input/status colors
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent default form submission
-    setStatus('loading');
-    setFeedbackMessage('');
+  // Removed handleSubmit function
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, message }),
-      });
+  // Framer Motion Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Stagger delay between children
+      },
+    },
+  };
 
-      const result = await response.json();
-
-      if (response.ok) {
-        setStatus('success');
-        setFeedbackMessage(result.message || 'Submission successful!');
-        // Clear form fields
-        setName('');
-        setEmail('');
-        setMessage('');
-      } else {
-        setStatus('error');
-        setFeedbackMessage(result.error || 'An error occurred during submission.');
-      }
-    } catch (error) {
-      console.error('Contact form submission error:', error);
-      setStatus('error');
-      setFeedbackMessage('Failed to send message. Please try again later.');
-    }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 }, // Start hidden and slightly down
+    visible: {
+      opacity: 1,
+      y: 0, // Animate to visible and original y position
+      transition: {
+        duration: 0.5, // Animation duration
+        ease: "easeOut", // Animation easing
+      },
+    },
   };
 
   return (
     <div className={`relative flex min-h-screen flex-col items-center justify-center ${backgroundColor} ${primaryTextColor} p-8 overflow-hidden`}> {/* Added relative and overflow-hidden */}
       <BackgroundSVG /> {/* Render the background SVG */}
       {/* Main Content Area */}
-      <div className="z-10 w-full max-w-4xl text-center">
-        <h1 className={`text-4xl md:text-6xl font-bold mb-4 ${accentColor}`}>
+      <motion.div
+        className="z-10 w-full max-w-4xl text-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.h1
+          className={`text-4xl md:text-6xl font-bold mb-4 ${accentColor}`}
+          variants={itemVariants}
+        >
           My Portfolio
-        </h1>
-        <p className="text-lg md:text-xl mb-8 text-gray-300">
+        </motion.h1>
+        <motion.p
+          className="text-lg md:text-xl mb-8 text-gray-300"
+          variants={itemVariants}
+        >
           Exploring technology and creativity.
-        </p>
+        </motion.p>
 
         {/* Navigation Links */}
-        <nav className="mb-12 flex justify-center space-x-4 md:space-x-6">
-          <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>GitHub</a>
-          <a href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>Project Site</a>
-          <a href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors`}>Twitter</a>
-          <Link href="/blog" className={`hover:text-teal-300 transition-colors`}>Blog</Link>
-        </nav>
+        <motion.nav
+          className="mb-12 flex justify-center space-x-4 md:space-x-6"
+          variants={itemVariants}
+        >
+          <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>GitHub</a>
+          <a href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Project Site</a>
+          <a href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
+          <Link href="/blog" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Blog</Link>
+          {/* Added Contact link */}
+          <Link href="/contact" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
+        </motion.nav>
 
-        {/* Contact Form Section */}
-        <div className="w-full max-w-md mx-auto bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Contact Me</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1 text-left">Name</label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                required
-                value={name} // Controlled component
-                onChange={(e) => setName(e.target.value)} // Update state on change
-                className={`w-full px-3 py-2 ${inputBgColor} ${primaryTextColor} border ${inputBorderColor} rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1 text-left">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                required
-                value={email} // Controlled component
-                onChange={(e) => setEmail(e.target.value)} // Update state on change
-                className={`w-full px-3 py-2 ${inputBgColor} ${primaryTextColor} border ${inputBorderColor} rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1 text-left">Message</label>
-              <textarea
-                name="message"
-                id="message"
-                rows={4}
-                required
-                value={message} // Controlled component
-                onChange={(e) => setMessage(e.target.value)} // Update state on change
-                className={`w-full px-3 py-2 ${inputBgColor} ${primaryTextColor} border ${inputBorderColor} rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
-              ></textarea>
-            </div>
-            <div>
-              <button
-                type="submit"
-                disabled={status === 'loading'} // Disable button while loading
-                className={`w-full py-2 px-4 ${buttonBgColor} ${primaryTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {status === 'loading' ? 'Sending...' : 'Send Message'}
-              </button>
-            </div>
-            {/* Feedback Message Area */}
-            {feedbackMessage && (
-              <p className={`mt-4 text-sm text-center ${status === 'success' ? successColor : errorColor}`}>
-                {feedbackMessage}
-              </p>
-            )}
-          </form>
-        </div>
-      </div>
+        {/* Removed Contact Form Section */}
+        {/* Optionally add a call to action linking to the contact page */}
+        <motion.div className="mt-12" variants={itemVariants}>
+          <Link href="/contact" className={`inline-block px-6 py-3 rounded-md ${"bg-teal-600"} ${"hover:bg-teal-700"} text-white font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-teal-500/30`}>
+            Get In Touch
+          </Link>
+        </motion.div>
+      </motion.div>
 
       {/* Optional: Footer or other elements can go here */}
     </div>
