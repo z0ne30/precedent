@@ -1,18 +1,26 @@
 // app/components/background.tsx
 
-const BackgroundSVG = () => (
+// Define props type to accept className and potentially others
+interface BackgroundSVGProps {
+  className?: string;
+  // Add other props like baseOpacity, lineOpacity etc. if needed for variations
+}
+
+const BackgroundSVG = ({ className }: BackgroundSVGProps) => (
   <svg
     width="100%"
     height="100%"
     viewBox="0 0 1200 800"
     xmlns="http://www.w3.org/2000/svg"
     preserveAspectRatio="xMidYMid slice"
+    className={className} // Apply the passed className
     style={{
+      // Keep essential positioning styles, opacity can be controlled via className or props now
       position: 'absolute',
       top: 0,
       left: 0,
-      zIndex: -1, // Ensure it's behind content
-      opacity: 0.3, // Increased root opacity
+      // zIndex: -1, // zIndex might be better controlled by parent container
+      opacity: 0.3, // Default opacity, can be overridden by className
     }}
   >
     <defs>

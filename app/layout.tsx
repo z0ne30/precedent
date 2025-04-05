@@ -1,10 +1,11 @@
 // Reverted to Server Component
 import "./globals.css";
 import cx from "classnames";
-import { sfPro, inter } from "./fonts";
+import { sfPro, inter, orbitron } from "./fonts"; // Import orbitron
 // Removed Footer, Suspense, Navbar imports
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { ClerkProvider } from "@clerk/nextjs";
+import CustomCursor from "./components/CustomCursor"; // Import the custom cursor
 // Removed usePathname import
 
 export const metadata = {
@@ -27,7 +28,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         {/* Minimal body, only applying fonts and rendering children + analytics */}
-        <body className={cx(sfPro.variable, inter.variable)}>
+        <body className={cx(sfPro.variable, inter.variable, orbitron.variable)}> {/* Add orbitron variable */}
+          <CustomCursor /> {/* Add the custom cursor component */}
           {children}
           <VercelAnalytics />
         </body>

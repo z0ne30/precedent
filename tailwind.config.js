@@ -9,8 +9,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ["var(--font-sf)", "system-ui", "sans-serif"],
-        default: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-sf)", "system-ui", "sans-serif"], // Keep SF Pro for display
+        default: ["var(--font-inter)", "system-ui", "sans-serif"], // Keep Inter for default
+        orbitron: ["var(--font-orbitron)", "system-ui", "sans-serif"], // Add Orbitron
       },
       animation: {
         // Fade up and down

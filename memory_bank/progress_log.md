@@ -113,3 +113,12 @@
     *   Increased opacity in `app/components/background.tsx` to make background SVG visible.
     *   Added Tailwind hover effects (scale, shadow) to links/button in `app/page.tsx`.
     *   Added Framer Motion entrance animations (staggered fade-in/slide-up) to content in `app/page.tsx`.
+*   **4/5/2025, 2:15:19 AM UTC** - **Removed Magnetic Cursor Effect:** Removed magnetic dot snapping logic and element from `app/components/CustomCursor.tsx` and associated `data-cursor-magnetic` attributes from `app/page.tsx` per user request.
+*   **4/5/2025, 2:31:39 AM UTC** - **Updated Landing Page Font & Spacing:**
+    *   Configured Orbitron font (`app/fonts/index.ts`, `app/layout.tsx`, `tailwind.config.js`).
+    *   Applied Orbitron font to main heading (`h1`) in `app/page.tsx`.
+    *   Increased vertical margins between elements in `app/page.tsx`.
+*   **4/5/2025, 2:48:35 AM UTC** - **Implemented Manual Text Scramble Animation:**
+    *   Attempted to use `react-text-scramble` and `use-scramble` libraries, but encountered runtime errors/incompatibilities. Uninstalled both.
+    *   Implemented a manual character scramble effect for the subtitle in `app/page.tsx` using React state and `useEffect`/`setInterval`.
+*   **4/5/2025, 2:45:14 AM UTC** - **Diagnosed Build Error:** Traced persistent build error (`Unexpected token 'div'`) to an issue likely caused by text animation libraries (`react-scramble`/`use-scramble`) interacting poorly with the build process. Resolved by removing the library and implementing animation manually. (Note: Initial error message was misleading).

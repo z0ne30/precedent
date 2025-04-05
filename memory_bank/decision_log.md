@@ -18,3 +18,6 @@
 *   **4/5/2025, 1:34:38 AM UTC** - **Decision:** Refactor contact form into separate component (`app/components/ContactForm.tsx`) and page (`app/contact/page.tsx`). **Reason:** Improve code organization and separate concerns as requested by user.
 *   **4/5/2025, 1:42:05 AM UTC** - **Decision:** Increase opacity of background SVG (`app/components/background.tsx`). **Reason:** Address user feedback that the background was not visible.
 *   **4/5/2025, 1:43:10 AM UTC** - **Decision:** Implement Tailwind hover effects and Framer Motion entrance animations on landing page (`app/page.tsx`). **Reason:** Enhance visual appeal and interactivity as requested by user.
+*   **4/5/2025, 2:15:10 AM UTC** - **Decision:** Remove magnetic dot snapping effect from custom cursor. **Reason:** User request to simplify cursor interaction.
+*   **4/5/2025, 2:30:40 AM UTC** - **Decision:** Change landing page heading font to Orbitron and increase element spacing. **Reason:** User request for a more futuristic look and spacious layout.
+*   **4/5/2025, 2:48:03 AM UTC** - **Decision:** Implement manual text scramble animation for landing page subtitle. **Reason:** User preferred scramble effect, but libraries (`react-scramble`, `use-scramble`) caused build errors/incompatibility. Manual implementation avoids external dependencies.
