@@ -17,7 +17,10 @@ export async function GET(request: Request, { params }: Params) {
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  // TODO: Add role/permission check here based on session.user if needed
+  // Check if user is admin
+  if (session.user.isAdmin !== true) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   if (isNaN(postId)) {
     return NextResponse.json({ error: 'Invalid post ID' }, { status: 400 });
@@ -52,7 +55,10 @@ export async function PUT(request: Request, { params }: Params) {
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  // TODO: Add role/permission check here based on session.user if needed
+  // Check if user is admin
+  if (session.user.isAdmin !== true) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   if (isNaN(postId)) {
     return NextResponse.json({ error: 'Invalid post ID' }, { status: 400 });
@@ -134,7 +140,10 @@ export async function DELETE(request: Request, { params }: Params) {
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  // TODO: Add role/permission check here based on session.user if needed
+  // Check if user is admin
+  if (session.user.isAdmin !== true) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   if (isNaN(postId)) {
     return NextResponse.json({ error: 'Invalid post ID' }, { status: 400 });

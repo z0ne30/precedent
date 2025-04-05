@@ -81,7 +81,22 @@ export default function AdminDashboardPage() {
     );
   }
 
-  // Render dashboard only if authenticated
+  // Check if authenticated user is an admin
+  if (session?.user?.isAdmin !== true) {
+    return (
+       <div className="flex flex-col justify-center items-center h-screen">
+        <p className="mb-4 text-red-600">Access Denied: You do not have permission to view this page.</p>
+        <button
+          onClick={() => signOut()}
+          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+        >
+          Sign Out
+        </button>
+      </div>
+    );
+  }
+
+  // Render dashboard only if authenticated AND admin
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       {/* Left Panel: Post List */}

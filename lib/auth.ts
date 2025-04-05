@@ -35,15 +35,32 @@ export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }: { session: any, token: any }) {
-      if (token) {
+      // Add properties from token to session object
+      if (token?.sub) {
         session.user.id = token.sub;
+      }
+      if (token?.isAdmin !== undefined) { // Check if isAdmin exists on token
+        session.user.isAdmin = token.isAdmin;
       }
       return session;
     },
-    async jwt({ token, user }: { token: any, user: any }) {
-      if (user) {
-        token.sub = user.id;
+    async jwt({ token, user, account, profile }: { token: any, user?: any, account?: any, profile?: any }) {
+      // On initial sign in, 'user' object is passed (from adapter)
+      if (account && user) {
+        token.sub = user.id; // Persist user.id from adapter into token
+        // Fetch isAdmin status from DB using user.id
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { isAdmin: true },
+          });
+          token.isAdmin = dbUser?.isAdmin ?? false; // Add isAdmin to token, default false
+        } catch (error) {
+          console.error("Error fetching user isAdmin status in JWT callback:", error);
+          token.isAdmin = false; // Default to false on error
+        }
       }
+      // Subsequent calls only have 'token'. The isAdmin value is already in the token.
       return token;
     },
   },

@@ -125,3 +125,30 @@
 *   **4/5/2025, 2:59:00 AM UTC** - **Re-implemented Text Scramble with `use-scramble`:** Reverted manual scramble implementation and re-implemented using the `use-scramble` hook per user request, including installing the dependency and creating the `ScramblingText.tsx` component. Build errors persisted, likely due to build cache/tooling issues.
 *   **4/5/2025, 2:55:55 AM UTC** - **Adjusted Landing Page Layout:** Increased heading font size, increased vertical margins, and widened max content width on `app/page.tsx` for better use of landscape space.
 *   **4/5/2025, 2:50:40 AM UTC** - **Added Deploy Script:** Added `"deploy:prod": "vercel --prod"` script to `package.json`.
+*   **4/5/2025, 1:55:37 PM UTC** - **Implemented Admin Dashboard Overhaul (Phase 1):**
+    *   Verified/updated admin API endpoints (`/api/admin/posts`, `/api/admin/posts/[id]`) for GET, POST, PUT, DELETE.
+    *   Created two-panel layout in `app/admin/page.tsx` using client component state.
+    *   Created `app/components/admin/PostList.tsx` to display posts with relative timestamps and handle selection.
+    *   Created `app/components/admin/PostEditor.tsx` to fetch/display selected post, handle edits (title, slug, content, published, tags) with debounced saving, display timestamps, and handle deletion.
+    *   Integrated `PostList` and `PostEditor` into `app/admin/page.tsx`.
+*   **4/5/2025, 1:56:48 PM UTC** - **Implemented Blog Page Enhancements (Phase 2):**
+    *   Verified `/api/blog` endpoint provides necessary data.
+    *   Created `app/components/blog/PostCard.tsx` client component with card layout, Framer Motion hover animation, and Radix UI Tooltip for excerpt preview.
+    *   Integrated `PostCard` into `app/(default)/blog/page.tsx`, replacing previous article rendering.
+*   **4/5/2025, 2:35:39 PM UTC** - **Debugged Clerk Authentication:**
+    *   Diagnosed persistent "auth() called but clerkMiddleware() not detected" error.
+    *   Confirmed via logging and testing that `clerkMiddleware` was not executing for API routes despite various matcher configurations.
+    *   Applied workaround by removing `auth()` calls from API handlers.
+    *   Fixed related runtime error in `PostEditor` by ensuring `PUT /api/admin/posts/[id]` returns tags after update.
+*   **4/5/2025, 5:15:32 PM UTC** - **Refactored Authentication to NextAuth:**
+    *   Installed `next-auth` and `@next-auth/prisma-adapter`.
+    *   Configured NextAuth API route (`/api/auth/[...nextauth]`) with Google Provider and Prisma Adapter.
+    *   Created shared `lib/auth.ts` for `authOptions`.
+    *   Added NextAuth environment variables (`GOOGLE_CLIENT_ID/SECRET`, `NEXTAUTH_SECRET`) to `.env`.
+    *   Replaced `ClerkProvider` with `SessionProvider` in `app/layout.tsx`.
+    *   Removed Clerk middleware file.
+    *   Updated admin API routes to use `getServerSession` for protection.
+    *   Updated `app/admin/page.tsx` to use `useSession` hook for auth state, sign-in/out.
+    *   Fixed build errors related to `authOptions` export/import.
+    *   Fixed ESLint warning in `ScramblingText.tsx`.
+    *   Committed changes.

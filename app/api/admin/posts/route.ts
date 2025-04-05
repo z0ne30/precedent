@@ -12,9 +12,10 @@ export async function GET(request: Request) {
   if (!session || !session.user) { // Check for session and user object
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
-  // TODO: Add role/permission check here based on session.user if needed
-  // Example: if (session.user.role !== 'admin') { return NextResponse.json(...) }
+  // Check if user is admin
+  if (session.user.isAdmin !== true) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
 
   try {
     const posts = await prisma.post.findMany({
@@ -42,9 +43,11 @@ export async function POST(request: Request) {
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
-  // TODO: Add role/permission check here based on session.user if needed
-  // TODO: If associating posts with users, use session.user.id (added in callbacks)
+  // Check if user is admin
+  if (session.user.isAdmin !== true) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+  // TODO: If associating posts with users, use session.user.id
   // const userId = session.user.id;
 
   try {
