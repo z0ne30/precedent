@@ -1,22 +1,63 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+// import { auth } from '@clerk/nextjs/server'; // Remove Clerk import
+import { getServerSession } from "next-auth/next"; // Import NextAuth session utility
+import { authOptions } from "@/lib/auth"; // Import from shared auth file
 import { prisma } from '@/lib/prisma';
 
 interface Params {
   params: { id: string };
 }
 
-// PUT handler for updating a post
-export async function PUT(request: Request, { params }: Params) {
-  const { userId } = auth();
-  const postId = parseInt(params.id, 10); // Ensure ID is an integer
+// GET handler for fetching a single post by ID
+export async function GET(request: Request, { params }: Params) {
+  const session = await getServerSession(authOptions); // Get session using NextAuth
+  const postId = parseInt(params.id, 10);
 
-  if (!userId) {
+  // Check if user is authenticated
+  if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  // TODO: Add role/permission check here based on session.user if needed
+
   if (isNaN(postId)) {
     return NextResponse.json({ error: 'Invalid post ID' }, { status: 400 });
   }
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      include: {
+        tags: true, // Include related tags
+      },
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(post);
+
+  } catch (error) {
+    console.error(`Failed to fetch post ${postId}:`, error);
+    return NextResponse.json({ error: 'Failed to fetch post' }, { status: 500 });
+  }
+}
+
+// PUT handler for updating a post
+export async function PUT(request: Request, { params }: Params) {
+  const session = await getServerSession(authOptions); // Get session using NextAuth
+  const postId = parseInt(params.id, 10); // Ensure ID is an integer
+
+  // Check if user is authenticated
+  if (!session || !session.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  // TODO: Add role/permission check here based on session.user if needed
+
+  if (isNaN(postId)) {
+    return NextResponse.json({ error: 'Invalid post ID' }, { status: 400 });
+  }
+  
 
   // TODO: Add role/permission check here if needed later
 
@@ -68,6 +109,9 @@ export async function PUT(request: Request, { params }: Params) {
         // Optional: Ensure only the author can update if relation exists
         // authorId: userId,
       },
+      include: {
+        tags: true, // Ensure tags are returned after update
+      },
     });
 
     return NextResponse.json(updatedPost);
@@ -83,12 +127,15 @@ export async function PUT(request: Request, { params }: Params) {
 
 // DELETE handler for deleting a post
 export async function DELETE(request: Request, { params }: Params) {
-  const { userId } = auth();
+  const session = await getServerSession(authOptions); // Get session using NextAuth
   const postId = parseInt(params.id, 10);
 
-  if (!userId) {
+  // Check if user is authenticated
+  if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  // TODO: Add role/permission check here based on session.user if needed
+
   if (isNaN(postId)) {
     return NextResponse.json({ error: 'Invalid post ID' }, { status: 400 });
   }

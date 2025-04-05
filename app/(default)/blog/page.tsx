@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { prisma } from '../../../lib/prisma'; // Import prisma client at top level
+import { prisma } from '@/lib/prisma'; // Use alias
+import PostCard from '@/app/components/blog/PostCard'; // Import the new PostCard component
 
 // Revalidate this page every X seconds (e.g., 60)
 // Or use on-demand revalidation later
@@ -83,13 +84,12 @@ export default async function BlogPage({
   // Fetch all tags for the filter UI
   const tags = await getTags();
 
-  // TODO: Define colors consistent with landing page theme
+  // Define colors consistent with landing page theme (keep for page background/title)
   const backgroundColor = "bg-gray-900";
   const primaryTextColor = "text-white";
   const accentColor = "text-teal-400";
-  const cardBgColor = "bg-gray-800";
-  const tagColor = "bg-teal-700 text-teal-100";
-
+  const tagColor = "bg-teal-700 text-teal-100"; // Re-add for button styling
+  // cardBgColor and tagColor are now handled within PostCard
   return (
     <div className={`min-h-screen ${backgroundColor} ${primaryTextColor} p-8`}>
       <div className="max-w-4xl mx-auto">
@@ -153,25 +153,8 @@ export default async function BlogPage({
             <p className="text-center text-gray-400">No posts published yet.</p>
           )}
           {posts.map((post) => (
-            <article key={post.id} className={`${cardBgColor} p-6 rounded-lg shadow-md`}>
-              <h2 className="text-2xl font-semibold mb-2">
-                <Link href={`/blog/${post.slug}`} className={`hover:${accentColor} transition-colors`}>
-                  {post.title}
-                </Link>
-              </h2>
-              <div className="text-sm text-gray-400 mb-3">
-                Published on {new Date(post.createdAt).toLocaleDateString()}
-              </div>
-              {/* TODO: Add post excerpt/snippet here if desired */}
-              {/* <p className="text-gray-300 mb-4">Post snippet...</p> */}
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span key={tag.name} className={`text-xs font-medium px-2.5 py-0.5 rounded ${tagColor}`}>
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
-            </article>
+            // Use the PostCard component
+            <PostCard key={post.id} post={post} />
           ))}
         </div>
          {/* Link back to Home */}

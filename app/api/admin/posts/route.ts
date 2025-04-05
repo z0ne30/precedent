@@ -1,17 +1,51 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server'; // Import server-side auth
+// import { auth } from '@clerk/nextjs/server'; // Remove Clerk import
+import { getServerSession } from "next-auth/next"; // Import NextAuth session utility
+import { authOptions } from "@/lib/auth"; // Import from shared auth file
 import { prisma } from '@/lib/prisma';
 
-// POST handler for creating a new post
-export async function POST(request: Request) {
-  const { userId } = auth(); // Get user ID from Clerk
+// GET handler for fetching all posts (for admin list)
+export async function GET(request: Request) {
+  const session = await getServerSession(authOptions); // Get session using NextAuth
 
   // Check if user is authenticated
-  if (!userId) {
+  if (!session || !session.user) { // Check for session and user object
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // TODO: Add role/permission check here if needed later
+  // TODO: Add role/permission check here based on session.user if needed
+  // Example: if (session.user.role !== 'admin') { return NextResponse.json(...) }
+
+  try {
+    const posts = await prisma.post.findMany({
+      select: {
+        id: true,
+        title: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        updatedAt: 'desc', // Show most recently updated first
+      },
+    });
+    return NextResponse.json(posts);
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
+  }
+}
+
+// POST handler for creating a new post
+export async function POST(request: Request) {
+  const session = await getServerSession(authOptions); // Get session using NextAuth
+
+  // Check if user is authenticated
+  if (!session || !session.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // TODO: Add role/permission check here based on session.user if needed
+  // TODO: If associating posts with users, use session.user.id (added in callbacks)
+  // const userId = session.user.id;
 
   try {
     const body = await request.json();

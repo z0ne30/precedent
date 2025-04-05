@@ -1,86 +1,122 @@
-import Link from 'next/link';
-import { UserButton } from '@clerk/nextjs';
-import { prisma } from '../../lib/prisma'; // Corrected import path after moving admin dir
-import DeletePostButton from './DeletePostButton'; // Correct relative path
+'use client'; // This needs to be a Client Component to manage state and use hooks
 
-// TODO: Define colors consistent with theme
-const backgroundColor = "bg-gray-900";
-const primaryTextColor = "text-white";
-const accentColor = "text-teal-400";
-const cardBgColor = "bg-gray-800";
+import { useState, useEffect, useCallback } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react'; // Import NextAuth hooks
+import { Post } from '@prisma/client'; // Assuming Post type is available
+import PostList from '@/app/components/admin/PostList'; // Import PostList
+import PostEditor from '@/app/components/admin/PostEditor'; // Import PostEditor
 
-// Make component async to fetch data
-export default async function AdminDashboardPage() {
-  // Fetch all posts (published and drafts)
-  const posts = await prisma.post.findMany({
-    orderBy: { updatedAt: 'desc' }, // Show recently updated first
-    include: {
-      tags: { select: { name: true } }, // Include tags if needed later
-    },
-  });
+// Define a type for the partial post data needed for the list
+type PostListItem = Pick<Post, 'id' | 'title' | 'updatedAt'>;
+
+export default function AdminDashboardPage() {
+  const { data: session, status } = useSession(); // Get session status
+  const [posts, setPosts] = useState<PostListItem[]>([]);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isPostsLoading, setIsPostsLoading] = useState<boolean>(false); // Rename isLoading to avoid conflict
+
+  // Callback to refresh the post list - only fetch if authenticated
+  const fetchPosts = useCallback(async () => {
+    if (status !== 'authenticated') return; // Don't fetch if not logged in
+    setIsPostsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/admin/posts');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch posts: ${response.statusText}`);
+      }
+      const data: PostListItem[] = await response.json();
+      setPosts(data);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'An unknown error occurred');
+    } finally {
+      setIsPostsLoading(false);
+    }
+  }, [status]); // Add status as a dependency
+
+  // Fetch posts when authenticated status changes
+  useEffect(() => {
+    if (status === 'authenticated') {
+      fetchPosts();
+    } else {
+      // Clear posts if user logs out
+      setPosts([]);
+      setSelectedPostId(null);
+      setError(null);
+    }
+  }, [status, fetchPosts]); // Depend on status and fetchPosts
+
+  const handleSelectPost = (id: number) => {
+    setSelectedPostId(id);
+  };
+
+  // Handler to refresh list after update/delete in editor
+  const handlePostUpdate = () => {
+    // Deselect post if it was deleted? Optional, depends on desired UX.
+    // setSelectedPostId(null);
+    if (status === 'authenticated') {
+      fetchPosts(); // Re-fetch the list only if authenticated
+    }
+  };
+
+  // Handle different session statuses
+  if (status === "loading") {
+    return <div className="flex justify-center items-center h-screen"><p>Loading session...</p></div>;
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <p className="mb-4">Please sign in to access the admin dashboard.</p>
+        <button
+          onClick={() => signIn('google')} // Trigger Google sign-in
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          Sign in with Google
+        </button>
+      </div>
+    );
+  }
+
+  // Render dashboard only if authenticated
   return (
-    <div className={`min-h-screen ${backgroundColor} ${primaryTextColor} p-8`}>
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8 flex justify-between items-center">
-          <h1 className={`text-3xl font-bold ${accentColor}`}>
-            Admin Dashboard
-          </h1>
-          <UserButton afterSignOutUrl="/" /> {/* Allow sign out */}
-        </header>
-
-        <div className={`${cardBgColor} p-6 rounded-lg shadow-md`}>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Manage Blog Posts</h2>
-            <Link href="/admin/posts/new" className={`px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-md hover:bg-teal-700 transition-colors`}>
-              Create New Post
-            </Link>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="text-left py-2 px-3 uppercase text-sm font-semibold text-gray-400">Title</th>
-                  <th className="text-left py-2 px-3 uppercase text-sm font-semibold text-gray-400">Status</th>
-                  <th className="text-left py-2 px-3 uppercase text-sm font-semibold text-gray-400">Last Updated</th>
-                  <th className="text-left py-2 px-3 uppercase text-sm font-semibold text-gray-400">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {posts.length === 0 && (
-                  <tr>
-                    <td colSpan={4} className="text-center py-4 text-gray-400">No posts found.</td>
-                  </tr>
-                )}
-                {posts.map((post) => (
-                  <tr key={post.id} className="border-b border-gray-700 hover:bg-gray-700/50">
-                    <td className="py-2 px-3">{post.title}</td>
-                    <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${post.published ? 'bg-green-700 text-green-100' : 'bg-yellow-700 text-yellow-100'}`}>
-                        {post.published ? 'Published' : 'Draft'}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-sm text-gray-400">{new Date(post.updatedAt).toLocaleString()}</td>
-                    <td className="py-2 px-3 space-x-2">
-                       <Link href={`/admin/posts/${post.id}/edit`} className={`text-xs ${accentColor} hover:underline`}>
-                         Edit
-                       </Link>
-                       <DeletePostButton postId={post.id} postTitle={post.title} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-6 flex justify-between">
-             <Link href="/blog" className={`hover:${accentColor} transition-colors text-sm`}>
-               View Public Blog
-             </Link>
-             <Link href="/" className={`hover:${accentColor} transition-colors text-sm`}>
-               Back to Home
-             </Link>
-          </div>
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Left Panel: Post List */}
+      {/* Left Panel: Post List */}
+      <div className="w-1/4 h-full overflow-y-auto bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4 flex flex-col">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Posts</h2>
+          {/* Add Sign Out Button */}
+          <button
+            onClick={() => signOut()}
+            className="text-sm px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            Sign Out
+          </button>
         </div>
+        {isPostsLoading && <p className="text-gray-500 dark:text-gray-400">Loading posts...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+        {!isPostsLoading && !error && (
+          <PostList
+            posts={posts}
+            selectedPostId={selectedPostId}
+            onSelectPost={handleSelectPost}
+          />
+        )}
+        {/* Spacer to push user info down if needed, or integrate differently */}
+        <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+           <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+             Signed in as: {session?.user?.email}
+           </p>
+        </div>
+      </div>
 
+      {/* Right Panel: Post Editor */}
+      <div className="flex-1 h-full overflow-y-auto p-6 bg-gray-50 dark:bg-gray-850"> {/* Slightly different bg */}
+        <PostEditor postId={selectedPostId} onPostUpdate={handlePostUpdate} />
       </div>
     </div>
   );

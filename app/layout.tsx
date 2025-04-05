@@ -4,7 +4,8 @@ import cx from "classnames";
 import { sfPro, inter, orbitron } from "./fonts"; // Import orbitron
 // Removed Footer, Suspense, Navbar imports
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
-import { ClerkProvider } from "@clerk/nextjs";
+// import { ClerkProvider } from "@clerk/nextjs"; // Remove ClerkProvider import
+import SessionProviderWrapper from "./components/providers/SessionProviderWrapper"; // Import NextAuth provider wrapper
 import CustomCursor from "./components/CustomCursor"; // Import the custom cursor
 // Removed usePathname import
 
@@ -25,7 +26,7 @@ export default function RootLayout({
 }) {
   // Removed pathname logic
   return (
-    <ClerkProvider>
+    <SessionProviderWrapper>
       <html lang="en">
         {/* Minimal body, only applying fonts and rendering children + analytics */}
         <body className={cx(sfPro.variable, inter.variable, orbitron.variable)}> {/* Add orbitron variable */}
@@ -34,6 +35,6 @@ export default function RootLayout({
           <VercelAnalytics />
         </body>
       </html>
-    </ClerkProvider>
+    </SessionProviderWrapper>
   );
 }
