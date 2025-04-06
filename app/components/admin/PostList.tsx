@@ -45,6 +45,7 @@ export default function PostList({ posts, selectedPostId, onSelectPost }: PostLi
     <div>
       <div className="mb-4">
         <Link
+          data-cursor-magnetic // Add attribute
           href="/admin/posts/new"
           className="block w-full text-center px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
         >
@@ -58,6 +59,7 @@ export default function PostList({ posts, selectedPostId, onSelectPost }: PostLi
           {posts.map((post) => (
             <li key={post.id}>
               <button
+                data-cursor-magnetic // Add attribute
                 onClick={() => onSelectPost(post.id)}
                 className={`w-full text-left p-2 rounded cursor-pointer transition-colors ${
                   selectedPostId === post.id

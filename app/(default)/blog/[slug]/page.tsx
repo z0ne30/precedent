@@ -72,7 +72,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* Back Link */}
         <div className="mb-8">
           {/* Apply link color */}
-          <Link href="/blog" className={`text-gray-700 hover:${accentColor} transition-colors`}>
+          <Link data-cursor-magnetic href="/blog" className={`text-gray-700 hover:${accentColor} transition-colors`}>
             &larr; Back to Blog
           </Link>
         </div>

@@ -47,7 +47,7 @@ export default async function EditPostPage({ params }: PageProps) {
     <div className={`min-h-screen ${backgroundColor} ${primaryTextColor} p-8`}>
       <div className="max-w-3xl mx-auto">
          <div className="mb-6">
-           <Link href="/admin" className={`hover:${accentColor} transition-colors text-sm`}>
+           <Link data-cursor-magnetic href="/admin" className={`hover:${accentColor} transition-colors text-sm`}>
              &larr; Back to Admin Dashboard
            </Link>
          </div>

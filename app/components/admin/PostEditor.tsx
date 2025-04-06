@@ -215,6 +215,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
           {saveStatus === 'saved' && <span className="text-sm text-green-600 dark:text-green-400 mr-2">Saved!</span>}
           {saveStatus === 'error' && <span className="text-sm text-red-500 mr-2">Save Error!</span>}
           <button
+            data-cursor-magnetic // Add attribute
             onClick={handleDelete}
             disabled={isDeleting}
             className="px-4 py-2 bg-red-400 text-white rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 transition-colors"

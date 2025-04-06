@@ -76,7 +76,7 @@ export default function NewPostPage() {
     <div className={`min-h-screen bg-gray-50 text-gray-900 p-8`}>
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
-           <Link href="/admin" className={`text-gray-700 hover:text-teal-600 transition-colors text-sm`}>
+           <Link data-cursor-magnetic href="/admin" className={`text-gray-700 hover:text-teal-600 transition-colors text-sm`}>
              &larr; Back to Admin Dashboard
            </Link>
         </div>
@@ -154,6 +154,7 @@ export default function NewPostPage() {
           {/* Submit Button & Error Message */}
           <div>
             <button
+              data-cursor-magnetic // Add attribute
               type="submit"
               disabled={status === 'loading'}
               className={`w-full py-2 px-4 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed`}

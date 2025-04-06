@@ -121,6 +121,7 @@ export default async function BlogPage({
           {/* Tag Filtering Links */}
           <div className="flex flex-wrap gap-2 justify-center md:justify-end">
              <Link
+               data-cursor-magnetic // Add attribute
                href="/blog"
                className={`text-sm px-3 py-1 rounded-full transition-colors border ${
                  !selectedTag
@@ -132,6 +133,7 @@ export default async function BlogPage({
              </Link>
             {tags.map((tag) => (
               <Link
+                data-cursor-magnetic // Add attribute
                 key={tag.name}
                 // Preserve search query when clicking tags if needed, or clear it
                 href={`/blog?tag=${encodeURIComponent(tag.name)}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ''}`}
@@ -159,7 +161,7 @@ export default async function BlogPage({
         </div>
          {/* Link back to Home */}
          <div className="mt-12 text-center">
-           <Link href="/" className={`hover:${accentColor} transition-colors`}>
+           <Link data-cursor-magnetic href="/" className={`hover:${accentColor} transition-colors`}>
              &larr; Back to Home
            </Link>
          </div>

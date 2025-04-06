@@ -81,6 +81,7 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col justify-center items-center h-screen">
         <p className="mb-4">Please sign in to access the admin dashboard.</p>
         <button
+          data-cursor-magnetic // Add attribute
           onClick={() => signIn('google')} // Trigger Google sign-in
           className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
         >
@@ -96,6 +97,7 @@ export default function AdminDashboardPage() {
        <div className="flex flex-col justify-center items-center h-screen">
         <p className="mb-4 text-red-600">Access Denied: You do not have permission to view this page.</p>
         <button
+          data-cursor-magnetic // Add attribute
           onClick={() => signOut()}
           className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-200 transition-colors"
         >
@@ -115,6 +117,7 @@ export default function AdminDashboardPage() {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Posts</h2>
           {/* Add Sign Out Button */}
           <button
+            data-cursor-magnetic // Add attribute
             onClick={() => signOut()}
             className="text-sm px-3 py-1 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-cyan-200 transition-colors"
           >

@@ -155,6 +155,7 @@ export default function EditPostForm({ post }: EditPostFormProps) {
        {/* Submit Button & Error Message */}
        <div>
          <button
+           data-cursor-magnetic // Add attribute
            type="submit"
            disabled={status === 'loading'}
            className={`w-full py-2 px-4 ${buttonBgColor} ${primaryTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed`}

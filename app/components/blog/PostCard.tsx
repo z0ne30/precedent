@@ -54,7 +54,7 @@ export default function PostCard({ post }: PostCardProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Link href={`/blog/${post.slug}`} className="block group">
+            <Link data-cursor-magnetic href={`/blog/${post.slug}`} className="block group">
               <h2 className={`text-2xl font-semibold mb-2 text-gray-900 group-hover:text-teal-600 transition-colors duration-200`}>
                 {post.title}
               </h2>

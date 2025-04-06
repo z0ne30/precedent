@@ -16,7 +16,7 @@ export default function ContactPage() {
         <ContactForm />
          {/* Link back to Home */}
          <div className="mt-12 text-center">
-           <Link href="/" className={`hover:${accentColor} transition-colors`}>
+           <Link data-cursor-magnetic href="/" className={`hover:${accentColor} transition-colors`}>
              &larr; Back to Home
            </Link>
          </div>
