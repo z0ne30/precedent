@@ -46,7 +46,7 @@ export default function PostList({ posts, selectedPostId, onSelectPost }: PostLi
       <div className="mb-4">
         <Link
           href="/admin/posts/new"
-          className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          className="block w-full text-center px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
         >
           Create New Post
         </Link>
@@ -61,12 +61,12 @@ export default function PostList({ posts, selectedPostId, onSelectPost }: PostLi
                 onClick={() => onSelectPost(post.id)}
                 className={`w-full text-left p-2 rounded cursor-pointer transition-colors ${
                   selectedPostId === post.id
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 font-semibold'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    ? 'bg-teal-100 text-teal-700 font-semibold' // Active state
+                    : 'text-gray-700 hover:bg-gray-50' // Inactive state + hover
                 }`}
               >
                 <span className="block truncate">{post.title || 'Untitled Post'}</span>
-                <span className="block text-xs text-gray-500 dark:text-gray-400">
+                <span className="block text-xs text-gray-500">
                   Edited {formatRelativeTime(new Date(post.updatedAt))}
                 </span>
               </button>

@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure body background doesn't cover the absolute positioned SVG */
+body {
+  background-color: transparent !important; /* Force transparent */
+}
 /* Custom Cursor Background Reveal */
 .cursor-reveal-layer {
   /* Ensure it covers the same area */

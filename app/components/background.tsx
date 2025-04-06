@@ -8,19 +8,18 @@ interface BackgroundSVGProps {
 
 const BackgroundSVG = ({ className }: BackgroundSVGProps) => (
   <svg
-    width="100%"
-    height="100%"
+    width="100%" // Ensure SVG tries to fill container width
+    height="100%" // Ensure SVG tries to fill container height
     viewBox="0 0 1200 800"
     xmlns="http://www.w3.org/2000/svg"
     preserveAspectRatio="xMidYMid slice"
     className={className} // Apply the passed className
+    // Restore original inline styles
     style={{
-      // Keep essential positioning styles, opacity can be controlled via className or props now
       position: 'absolute',
       top: 0,
       left: 0,
-      // zIndex: -1, // zIndex might be better controlled by parent container
-      opacity: 0.3, // Default opacity, can be overridden by className
+      opacity: 0.3, // Original opacity
     }}
   >
     <defs>
@@ -37,11 +36,13 @@ const BackgroundSVG = ({ className }: BackgroundSVGProps) => (
       </linearGradient>
     </defs>
 
-    {/* Subtle grid lines - Kept original grid for structure */}
-    <g opacity="0.4"> {/* Increased grid opacity more */}
+    {/* Grid lines removed */}
+    {/*
+    <g opacity="0.4">
       <path d="M0 100 H1200 M0 200 H1200 M0 300 H1200 M0 400 H1200 M0 500 H1200 M0 600 H1200 M0 700 H1200" stroke="#FFFFFF" strokeWidth="0.5" />
       <path d="M100 0 V800 M200 0 V800 M300 0 V800 M400 0 V800 M500 0 V800 M600 0 V800 M700 0 V800 M800 0 V800 M900 0 V800 M1000 0 V800 M1100 0 V800" stroke="#FFFFFF" strokeWidth="0.5" />
     </g>
+    */}
 
     {/* Interconnected Lines Network */}
     <g opacity="0.6" stroke="url(#tealGradient)" strokeWidth="1"> {/* Increased line opacity more */}

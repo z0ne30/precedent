@@ -15,8 +15,8 @@ export default function Home() {
   // Removed manual scramble state and effects
 
   // Define colors
-  const backgroundColor = "bg-gray-900";
-  const primaryTextColor = "text-white";
+  const backgroundColor = "bg-white"; // Change to light background
+  const primaryTextColor = "text-gray-900"; // Change to dark text
   const accentColor = "text-teal-400";
 
   // Framer Motion Variants
@@ -80,7 +80,7 @@ export default function Home() {
           <ScramblingText
             texts={["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"]}
             interval={3000} // Change text every 3 seconds
-            className="text-lg md:text-xl mb-20 text-gray-300" // Apply styling
+            className="text-lg md:text-xl mb-20 text-gray-600" // Adjust subtitle color for light bg
           />
         </motion.div>
 
@@ -90,11 +90,12 @@ export default function Home() {
           variants={itemVariants}
         >
           {/* Added back missing links and removed magnetic attributes */}
-          <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>GitHub</a>
-          <a href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Project Site</a>
-          <a href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
-          <Link href="/blog" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Blog</Link>
-          <Link href="/contact" className={`hover:text-teal-300 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
+          {/* Adjust link hover color for light bg */}
+          <a href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>GitHub</a>
+          <a href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Project Site</a>
+          <a href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
+          <Link href="/blog" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Blog</Link>
+          <Link href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
         </motion.nav>
 
       </motion.div> {/* Closing tag for main content motion.div */}

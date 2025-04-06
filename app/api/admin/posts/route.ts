@@ -6,15 +6,22 @@ import { prisma } from '@/lib/prisma';
 
 // GET handler for fetching all posts (for admin list)
 export async function GET(request: Request) {
-  const session = await getServerSession(authOptions); // Get session using NextAuth
+  let session = null;
+  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
 
-  // Check if user is authenticated
-  if (!session || !session.user) { // Check for session and user object
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  // Check if user is admin
-  if (session.user.isAdmin !== true) {
-     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!skipAuth) {
+    session = await getServerSession(authOptions); // Get session using NextAuth
+
+    // Check if user is authenticated
+    if (!session || !session.user) { // Check for session and user object
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    // Check if user is admin
+    if (session.user.isAdmin !== true) {
+       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  } else {
+    console.log("⚠️ Skipping auth check in DEV mode for /api/admin/posts GET");
   }
 
   try {
@@ -37,15 +44,22 @@ export async function GET(request: Request) {
 
 // POST handler for creating a new post
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions); // Get session using NextAuth
+  let session = null; // Redefine for scope if needed, or reuse if possible
+  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
 
-  // Check if user is authenticated
-  if (!session || !session.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  // Check if user is admin
-  if (session.user.isAdmin !== true) {
-     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!skipAuth) {
+    session = await getServerSession(authOptions); // Get session using NextAuth
+
+    // Check if user is authenticated
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    // Check if user is admin
+    if (session.user.isAdmin !== true) {
+       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  } else {
+     console.log("⚠️ Skipping auth check in DEV mode for /api/admin/posts POST");
   }
   // TODO: If associating posts with users, use session.user.id
   // const userId = session.user.id;

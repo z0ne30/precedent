@@ -60,35 +60,36 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  // TODO: Define colors consistent with theme
-  const backgroundColor = "bg-gray-900";
-  const primaryTextColor = "text-white";
-  const accentColor = "text-teal-400";
-  const metaTextColor = "text-gray-400";
-  const tagColor = "bg-teal-700 text-teal-100";
-  const contentTextColor = "text-gray-300"; // For post body
+  // Define colors consistent with light theme
+  const primaryTextColor = "text-gray-900"; // Dark text for light bg
+  const accentColor = "text-teal-600"; // Darker teal for links
+  const metaTextColor = "text-gray-500"; // Standard meta text color
+  // Tag and content styles applied directly below
 
   return (
-    <div className={`min-h-screen ${backgroundColor} ${primaryTextColor} p-8`}>
+    <div className={`min-h-screen ${primaryTextColor} p-8`}>
       <div className="max-w-3xl mx-auto">
         {/* Back Link */}
         <div className="mb-8">
-          <Link href="/blog" className={`hover:${accentColor} transition-colors`}>
+          {/* Apply link color */}
+          <Link href="/blog" className={`text-gray-700 hover:${accentColor} transition-colors`}>
             &larr; Back to Blog
           </Link>
         </div>
 
         {/* Post Header */}
         <header className="mb-6">
-          <h1 className={`text-4xl md:text-5xl font-bold mb-3 ${accentColor}`}>
+          {/* Apply title color */}
+          <h1 className={`text-4xl md:text-5xl font-bold mb-3 text-gray-900`}>
             {post.title}
           </h1>
+          {/* Apply meta text color */}
           <div className={`text-sm ${metaTextColor} mb-4`}>
             Published on {new Date(post.createdAt).toLocaleDateString()}
           </div>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag) => (
-              <span key={tag.name} className={`text-xs font-medium px-2.5 py-0.5 rounded ${tagColor}`}>
+              <span key={tag.name} className={`text-xs font-medium px-2.5 py-0.5 rounded bg-teal-100 text-teal-900`}>
                 {tag.name}
               </span>
             ))}
@@ -96,9 +97,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         </header>
 
         {/* Post Content */}
-        {/* TODO: Render Markdown/Rich Text content appropriately */}
-        {/* Apply Tailwind typography styles */}
-        <article className={`prose prose-invert lg:prose-xl max-w-none ${contentTextColor}`}>
+        {/* Render Markdown content using Tailwind Typography plugin */}
+        <article className={`prose lg:prose-xl max-w-none`}>
           <ReactMarkdown>
             {post.content}
           </ReactMarkdown>

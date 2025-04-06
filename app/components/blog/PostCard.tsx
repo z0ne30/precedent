@@ -41,39 +41,34 @@ function formatDate(date: Date): string {
 
 export default function PostCard({ post }: PostCardProps) {
   const excerpt = generateExcerpt(post.content);
-  // Define consistent colors (could be passed as props or use context later)
-  const cardBgColor = "bg-gray-800";
-  const primaryTextColor = "text-white";
-  const secondaryTextColor = "text-gray-400";
-  const accentColor = "text-teal-400"; // Hover color for title
-  const tagColor = "bg-teal-700 text-teal-100";
+  // Colors removed - using direct Tailwind classes based on STYLE_GUIDE.md
 
   return (
     <Tooltip.Provider delayDuration={300}>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <motion.article
-            className={`${cardBgColor} p-6 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-xl`}
+            className={`bg-white border border-gray-200 p-6 rounded-lg shadow-md transition-shadow duration-300 hover:shadow-lg`}
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <Link href={`/blog/${post.slug}`} className="block group">
-              <h2 className={`text-2xl font-semibold mb-2 ${primaryTextColor} group-hover:${accentColor} transition-colors duration-200`}>
+              <h2 className={`text-2xl font-semibold mb-2 text-gray-900 group-hover:text-teal-600 transition-colors duration-200`}>
                 {post.title}
               </h2>
             </Link>
-            <div className={`text-sm ${secondaryTextColor} mb-3`}>
+            <div className={`text-sm text-gray-500 mb-3`}>
               Published on {formatDate(new Date(post.createdAt))}
             </div>
             {/* Display a short part of the excerpt directly on the card */}
-            <p className={`text-gray-300 mb-4 text-sm leading-relaxed`}>
+            <p className={`text-gray-700 mb-4 text-sm leading-relaxed`}>
               {generateExcerpt(post.content, 80)} {/* Shorter version for card */}
             </p>
             <div className="flex flex-wrap gap-2 mt-auto"> {/* mt-auto pushes tags down */}
               {post.tags.map((tag) => (
-                <span key={tag.name} className={`text-xs font-medium px-2.5 py-0.5 rounded ${tagColor}`}>
+                <span key={tag.name} className={`text-xs font-medium px-2.5 py-0.5 rounded bg-teal-100 text-teal-900`}>
                   {tag.name}
                 </span>
               ))}
@@ -83,11 +78,11 @@ export default function PostCard({ post }: PostCardProps) {
         <Tooltip.Portal>
           <Tooltip.Content
             sideOffset={5}
-            className="max-w-xs p-3 bg-gray-900 text-white text-sm rounded-md shadow-lg border border-gray-700 z-50"
+            className="max-w-xs p-3 bg-white text-gray-700 text-sm rounded-md shadow-lg border border-gray-200 z-50"
             side="top" // Show tooltip above the card
           >
             {excerpt}
-            <Tooltip.Arrow className="fill-gray-900" />
+            <Tooltip.Arrow className="fill-white" /> {/* Match tooltip background */}
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

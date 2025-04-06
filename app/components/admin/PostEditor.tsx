@@ -207,7 +207,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-gray-50 dark:bg-gray-850 p-6 rounded-lg shadow">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Edit Post</h2>
         <div>
@@ -217,19 +217,20 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 bg-red-400 text-white rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 transition-colors"
           >
             {isDeleting ? 'Deleting...' : 'Delete Post'}
           </button>
         </div>
       </div>
 
-      {saveError && <p className="text-red-500 text-sm">Error: {saveError}</p>}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400">
+      {/* Display Timestamps only when post is loaded - MOVED HERE */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
          <p>Created: {formatDateTime(new Date(post.createdAt))}</p>
          <p className="md:text-right">Last Updated: {formatDateTime(new Date(post.updatedAt))}</p>
       </div>
+
+      {saveError && <p className="text-red-500 text-sm mb-4">Error: {saveError}</p>} {/* Added margin bottom */}
 
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}> {/* Prevent default form submission */}
         <div>
@@ -239,7 +240,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
             id="title"
             value={title}
             onChange={handleTitleChange}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
             placeholder="Post Title"
           />
         </div>
@@ -251,7 +252,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
             id="slug"
             value={slug}
             onChange={handleSlugChange}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
             placeholder="post-slug"
           />
         </div>
@@ -263,7 +264,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
             rows={15}
             value={content}
             onChange={handleContentChange}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono" // Use mono font for markdown/code
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900 font-mono"
             placeholder="Write your post content here (Markdown supported)..."
           />
            {/* TODO: Add Markdown preview option */}
@@ -276,7 +277,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
             id="tags"
             value={tagInput}
             onChange={handleTagInputChange}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
             placeholder="e.g., react, nextjs, webdev"
           />
         </div>
@@ -295,7 +296,6 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
                Published
              </label>
            </div>
-           {/* Save button removed as saving is debounced on change */}
         </div>
       </form>
     </div>

@@ -10,16 +10,22 @@ interface Params {
 
 // GET handler for fetching a single post by ID
 export async function GET(request: Request, { params }: Params) {
-  const session = await getServerSession(authOptions); // Get session using NextAuth
+  let session = null;
+  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
   const postId = parseInt(params.id, 10);
 
-  // Check if user is authenticated
-  if (!session || !session.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  // Check if user is admin
-  if (session.user.isAdmin !== true) {
-     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!skipAuth) {
+    session = await getServerSession(authOptions); // Get session using NextAuth
+    // Check if user is authenticated
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    // Check if user is admin
+    if (session.user.isAdmin !== true) {
+       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  } else {
+    console.log(`⚠️ Skipping auth check in DEV mode for /api/admin/posts/${postId} GET`);
   }
 
   if (isNaN(postId)) {
@@ -48,16 +54,22 @@ export async function GET(request: Request, { params }: Params) {
 
 // PUT handler for updating a post
 export async function PUT(request: Request, { params }: Params) {
-  const session = await getServerSession(authOptions); // Get session using NextAuth
+  let session = null; // Redefine for scope
+  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
   const postId = parseInt(params.id, 10); // Ensure ID is an integer
 
-  // Check if user is authenticated
-  if (!session || !session.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  // Check if user is admin
-  if (session.user.isAdmin !== true) {
-     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!skipAuth) {
+    session = await getServerSession(authOptions); // Get session using NextAuth
+    // Check if user is authenticated
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    // Check if user is admin
+    if (session.user.isAdmin !== true) {
+       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  } else {
+    console.log(`⚠️ Skipping auth check in DEV mode for /api/admin/posts/${postId} PUT`);
   }
 
   if (isNaN(postId)) {
@@ -133,16 +145,22 @@ export async function PUT(request: Request, { params }: Params) {
 
 // DELETE handler for deleting a post
 export async function DELETE(request: Request, { params }: Params) {
-  const session = await getServerSession(authOptions); // Get session using NextAuth
+  let session = null; // Redefine for scope
+  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
   const postId = parseInt(params.id, 10);
 
-  // Check if user is authenticated
-  if (!session || !session.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  // Check if user is admin
-  if (session.user.isAdmin !== true) {
-     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!skipAuth) {
+    session = await getServerSession(authOptions); // Get session using NextAuth
+    // Check if user is authenticated
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    // Check if user is admin
+    if (session.user.isAdmin !== true) {
+       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+  } else {
+    console.log(`⚠️ Skipping auth check in DEV mode for /api/admin/posts/${postId} DELETE`);
   }
 
   if (isNaN(postId)) {

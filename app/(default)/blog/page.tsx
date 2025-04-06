@@ -85,20 +85,20 @@ export default async function BlogPage({
   const tags = await getTags();
 
   // Define colors consistent with landing page theme (keep for page background/title)
-  const backgroundColor = "bg-gray-900";
-  const primaryTextColor = "text-white";
-  const accentColor = "text-teal-400";
-  const tagColor = "bg-teal-700 text-teal-100"; // Re-add for button styling
-  // cardBgColor and tagColor are now handled within PostCard
+  // Colors for page title and links
+  const primaryTextColor = "text-gray-900"; // Assuming light theme now
+  const accentColor = "text-teal-600"; // Darker teal for links on light bg
+  // Button/Input styles applied directly below
   return (
-    <div className={`min-h-screen ${backgroundColor} ${primaryTextColor} p-8`}>
+    <div className={`min-h-screen ${primaryTextColor} p-8`}>
       <div className="max-w-4xl mx-auto">
         <h1 className={`text-4xl md:text-5xl font-bold mb-8 text-center ${accentColor}`}>
           Blog
         </h1>
 
         {/* Wrap search and filters in a form */}
-        <form method="GET" action="/blog" className="mb-8 p-4 bg-gray-800 rounded-md flex flex-col md:flex-row gap-4 items-center justify-between">
+        {/* Adjust form background for light theme */}
+        <form method="GET" action="/blog" className="mb-8 p-4 bg-gray-100 rounded-md flex flex-col md:flex-row gap-4 items-center justify-between border border-gray-200">
           {/* Hidden input to persist tag filter during search */}
           {selectedTag && <input type="hidden" name="tag" value={selectedTag} />}
 
@@ -111,9 +111,9 @@ export default async function BlogPage({
                id="search"
                placeholder="Search posts..."
                defaultValue={searchQuery || ''} // Pre-fill from URL
-               className="w-full px-3 py-2 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
              />
-             <button type="submit" className={`px-4 py-2 ${tagColor} rounded-md hover:opacity-90 transition-opacity whitespace-nowrap`}>
+             <button type="submit" className={`px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors whitespace-nowrap`}>
                Search
              </button>
           </div>
@@ -122,10 +122,10 @@ export default async function BlogPage({
           <div className="flex flex-wrap gap-2 justify-center md:justify-end">
              <Link
                href="/blog"
-               className={`text-sm px-3 py-1 rounded-full transition-colors ${
+               className={`text-sm px-3 py-1 rounded-full transition-colors border ${
                  !selectedTag
-                   ? 'bg-teal-500 text-white'
-                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                   ? 'bg-teal-500 text-white border-teal-500' // Active style
+                   : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' // Inactive style
                }`}
              >
                All Posts
@@ -135,10 +135,10 @@ export default async function BlogPage({
                 key={tag.name}
                 // Preserve search query when clicking tags if needed, or clear it
                 href={`/blog?tag=${encodeURIComponent(tag.name)}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ''}`}
-                className={`text-sm px-3 py-1 rounded-full transition-colors ${
+                className={`text-sm px-3 py-1 rounded-full transition-colors border ${
                   selectedTag === tag.name
-                    ? 'bg-teal-500 text-white' // Active tag style
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600' // Inactive tag style
+                    ? 'bg-teal-500 text-white border-teal-500' // Active style
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' // Inactive style
                 }`}
               >
                 {tag.name}
