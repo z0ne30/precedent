@@ -50,11 +50,18 @@ export const authOptions: AuthOptions = {
         token.sub = user.id; // Persist user.id from adapter into token
         // Fetch isAdmin status from DB using user.id
         try {
+          // Fetch the full user object instead of selecting only isAdmin
           const dbUser = await prisma.user.findUnique({
             where: { id: user.id },
-            select: { isAdmin: true },
+            // select: { isAdmin: true }, // Remove select
           });
-          token.isAdmin = dbUser?.isAdmin ?? false; // Add isAdmin to token, default false
+          // Explicitly check if dbUser and isAdmin exist and are boolean
+          if (dbUser && typeof dbUser.isAdmin === 'boolean') {
+            token.isAdmin = dbUser.isAdmin;
+          } else {
+            // Default to false if user not found or isAdmin is not boolean
+            token.isAdmin = false;
+          }
         } catch (error) {
           console.error("Error fetching user isAdmin status in JWT callback:", error);
           token.isAdmin = false; // Default to false on error
