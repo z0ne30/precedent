@@ -51,19 +51,13 @@ export default function Home() {
         initial="hidden"
         animate="visible"
       >
-        {/* Heading */}
         <motion.h1
           className={`font-orbitron text-5xl md:text-9xl font-bold mb-16 ${accentColor}`}
-          // Increased size and margin
           variants={itemVariants}
         >
           Enyu Rao
         </motion.h1>
-
-        {/* Animated Subtitle */}
-        {/* Wrapper div for fixed height and overflow hidden */}
-        {/* Animated Subtitle using ScramblingText component */}
-        <motion.div variants={itemVariants}> {/* Wrapper for entrance animation */}
+        <motion.div variants={itemVariants}> 
           <ScramblingText
             texts={subtitles}
             interval={4000} // Change text every 3 seconds

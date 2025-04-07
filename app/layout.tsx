@@ -8,10 +8,9 @@ import CustomCursor from "./components/CustomCursor"; // Import the custom curso
 import VantaBackground from './components/VantaBackground'; // Import the new VantaBackground
 
 export const metadata = {
-  title: "Personal Website & Blog",
-  description: "A personal website featuring a landing page and integrated blog.",
-  // TODO: Update with your actual deployment URL if applicable
-  // metadataBase: new URL("https://yourdomain.com"),
+  title: "my digital garden",
+  description: "this is a continuous vibe test on capabilities of code gen AI",
+  metadataBase: new URL("https://vibetest.vercel.app/"),
 };
 
 // Restore async if needed, but likely not required for this minimal layout

@@ -7,13 +7,18 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 interface CustomCursorProps {}
 
 export default function CustomCursor({}: CustomCursorProps) {
+  // State to track if the Cal.com modal is open (based on body class)
+  const [isModalOpen, setIsModalOpen] = useState(
+    typeof window !== 'undefined' && document.body.classList.contains('cal-modal-open')
+  );
+
   const cursorX = useMotionValue(-100); // Position off-screen initially
   const cursorY = useMotionValue(-100);
   const magneticDotX = useMotionValue(-100); // For the smaller dot
   const magneticDotY = useMotionValue(-100);
 
   // Spring physics for smooth movement
-  const springConfig = { damping: 25, stiffness: 500, mass: 0.1 };
+  const springConfig = { damping: 15, stiffness: 200, mass: 0.5 }; // Adjusted for more lag
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
   const magneticDotXSpring = useSpring(magneticDotX, springConfig); // Spring for dot
@@ -35,7 +40,11 @@ export default function CustomCursor({}: CustomCursorProps) {
     // Could add a MutationObserver here to dynamically update targets if needed
   }, []); // Run once on mount
 
+  // Effect to handle mouse movement and snapping
   useEffect(() => {
+    // If modal is open, don't run mouse move logic for this cursor
+    if (isModalOpen) return;
+
     const handleMouseMove = (event: MouseEvent) => {
       // Define magnetic radius
       const magneticRadius = 50; // Pixels around the target center
@@ -43,8 +52,11 @@ export default function CustomCursor({}: CustomCursorProps) {
       // Update motion values AND CSS custom properties for the mask
       cursorX.set(clientX);
       cursorY.set(clientY);
-      document.documentElement.style.setProperty('--cursor-x', `${clientX}px`);
-      document.documentElement.style.setProperty('--cursor-y', `${clientY}px`);
+      // Only set CSS vars if not snapping (or handle reveal differently)
+      if (!isSnapping) {
+        document.documentElement.style.setProperty('--cursor-x', `${clientX}px`);
+        document.documentElement.style.setProperty('--cursor-y', `${clientY}px`);
+      }
 
       let snapped = false;
       targetCoords.current = null; // Reset target coords
@@ -59,9 +71,7 @@ export default function CustomCursor({}: CustomCursorProps) {
         );
 
         if (distance < magneticRadius) {
-          // Snap cursor and dot to target center
-          cursorX.set(targetCenterX);
-          cursorY.set(targetCenterY);
+          // Snap only the dot to target center
           magneticDotX.set(targetCenterX);
           magneticDotY.set(targetCenterY);
           targetCoords.current = { x: targetCenterX, y: targetCenterY }; // Store target coords
@@ -83,22 +93,52 @@ export default function CustomCursor({}: CustomCursorProps) {
 
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Hide the default cursor
-    document.body.style.cursor = 'none';
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      // Restore default cursor on component unmount
-      document.body.style.cursor = 'auto';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cursorX, cursorY, magneticDotX, magneticDotY]); // Add magnetic dot motion values
+  }, [cursorX, cursorY, magneticDotX, magneticDotY, isModalOpen]); // Re-run if modal state changes
+
+  // Effect to manage body cursor style and observe body class changes
+  useEffect(() => {
+    // Function to update modal state based on body class
+    const checkModalClass = () => {
+      const modalIsOpen = document.body.classList.contains('cal-modal-open');
+      setIsModalOpen(modalIsOpen);
+      // Set body cursor style based on modal state
+      document.body.style.cursor = modalIsOpen ? 'auto' : 'none';
+    };
+
+    // Initial check
+    checkModalClass();
+
+    // Observe changes to body class attribute
+    const observer = new MutationObserver((mutationsList) => {
+      for (let mutation of mutationsList) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          checkModalClass();
+        }
+      }
+    });
+
+    observer.observe(document.body, { attributes: true });
+
+    // Cleanup function
+    return () => {
+      observer.disconnect();
+      // Ensure default cursor is restored on unmount
+      document.body.style.cursor = 'auto';
+    };
+  }, []); // Run only once on mount
 
   // Update main cursor opacity based on snapping state
   // Fade out main cursor when snapping
   const mainCursorOpacity = isSnapping ? 0 : 1;
 
-  // TODO: Add logic for background reveal effect (CSS variables)
+  // Conditionally render the cursor elements only if the modal is NOT open
+  if (isModalOpen) {
+    return null; // Render nothing if modal is open
+  }
 
   return (
     <>

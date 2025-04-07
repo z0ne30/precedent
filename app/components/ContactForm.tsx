@@ -59,8 +59,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Contact Me</h2>
+    <div className="w-full max-w-md bg-white p-6 md:p-8 rounded-lg shadow-lg"> {/* Removed mx-auto */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Name</label>
@@ -103,7 +102,7 @@ export default function ContactForm() {
             data-cursor-magnetic // Add attribute
             type="submit"
             disabled={status === 'loading'}
-            className={`w-full py-2 px-4 ${buttonBgColor} ${buttonTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`w-full py-2 px-4 ${buttonBgColor} ${buttonTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {status === 'loading' ? 'Sending...' : 'Send Message'}
           </button>

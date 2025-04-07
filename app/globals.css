@@ -6,6 +6,11 @@
 body {
   background-color: transparent !important; /* Force transparent */
 }
+
+/* Ensure default cursor is visible when Cal modal is open and custom cursor is hidden */
+body.cal-modal-open {
+  cursor: auto !important;
+}
 /* Custom Cursor Background Reveal */
 .cursor-reveal-layer {
   /* Ensure it covers the same area */
