@@ -4,8 +4,6 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation'; // To redirect after success
 import Link from 'next/link';
 
-// Color constants removed - using direct Tailwind classes based on STYLE_GUIDE.md
-
 export default function NewPostPage() {
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -73,18 +71,23 @@ export default function NewPostPage() {
   };
 
   return (
+    // Apply Page Background and Primary Text Color (Light Theme)
     <div className={`min-h-screen bg-gray-50 text-gray-900 p-8`}>
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
+           {/* Apply Link Style (Light Theme) */}
            <Link data-cursor-magnetic href="/admin" className={`text-gray-700 hover:text-teal-600 transition-colors text-sm`}>
              &larr; Back to Admin Dashboard
            </Link>
         </div>
+        {/* Apply Title Style (Light Theme) */}
         <h1 className={`text-3xl font-bold mb-6 text-gray-900`}>Create New Post</h1>
 
+        {/* Apply Form Style (Light Theme) */}
         <form onSubmit={handleSubmit} className={`bg-white p-6 rounded-lg shadow border border-gray-200 space-y-4`}>
           {/* Title */}
           <div>
+            {/* Apply Label Style (Light Theme) */}
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title</label>
             <input
               type="text"
@@ -92,12 +95,14 @@ export default function NewPostPage() {
               value={title}
               onChange={handleTitleChange}
               required
+              // Apply Input Field Style (Light Theme)
               className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900`}
             />
           </div>
 
           {/* Slug */}
           <div>
+            {/* Apply Label Style (Light Theme) */}
             <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">Slug (URL Path)</label>
             <input
               type="text"
@@ -107,13 +112,16 @@ export default function NewPostPage() {
               required
               pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$" // Basic slug pattern
               title="Use lowercase letters, numbers, and hyphens only."
+              // Apply Input Field Style (Light Theme)
               className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900 font-mono text-sm`}
             />
+             {/* Apply Meta Text Style (Light Theme) */}
              <p className="text-xs text-gray-500 mt-1">Auto-generated from title, or enter manually (lowercase, numbers, hyphens).</p>
           </div>
 
           {/* Content (Textarea) */}
           <div>
+            {/* Apply Label Style (Light Theme) */}
             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">Content (Markdown)</label>
             <textarea
               id="content"
@@ -121,18 +129,21 @@ export default function NewPostPage() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
+              // Apply Input Field Style (Light Theme)
               className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900 font-mono text-sm`}
             />
           </div>
 
            {/* Tags */}
            <div>
+            {/* Apply Label Style (Light Theme) */}
             <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">Tags (comma-separated)</label>
             <input
               type="text"
               id="tags"
               value={tagString}
               onChange={(e) => setTagString(e.target.value)}
+              // Apply Input Field Style (Light Theme)
               className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900`}
             />
           </div>
@@ -146,6 +157,7 @@ export default function NewPostPage() {
                onChange={(e) => setPublished(e.target.checked)}
                className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
              />
+             {/* Apply Label Style (Light Theme) */}
              <label htmlFor="published" className="ml-2 block text-sm text-gray-700">
                Publish this post
              </label>
@@ -157,11 +169,13 @@ export default function NewPostPage() {
               data-cursor-magnetic // Add attribute
               type="submit"
               disabled={status === 'loading'}
+              // Apply Primary Action Button Style (Light Theme)
               className={`w-full py-2 px-4 bg-teal-500 text-white font-semibold rounded-md hover:bg-teal-600 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {status === 'loading' ? 'Creating...' : 'Create Post'}
             </button>
             {status === 'error' && (
+              // Apply Error Text Style (Light Theme)
               <p className={`mt-2 text-sm text-center text-red-800`}>
                 {errorMessage}
               </p>

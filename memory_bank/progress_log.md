@@ -152,3 +152,20 @@
     *   Fixed build errors related to `authOptions` export/import.
     *   Fixed ESLint warning in `ScramblingText.tsx`.
     *   Committed changes.
+*   **4/6/2025, 4:40:42 PM UTC** - **Implemented Admin Authorization:**
+    *   Added `isAdmin` boolean field to `User` model in `prisma/schema.prisma`.
+    *   Migrated database (`add_admin_flag`).
+    *   Updated NextAuth callbacks (`lib/auth.ts`) to include `isAdmin` in session/JWT.
+    *   Added NextAuth type augmentations (`types/next-auth.d.ts`).
+    *   Added authorization checks (`session.user.isAdmin`) to `/admin` page and `/api/admin/...` routes.
+    *   Fixed related TypeScript errors in `lib/auth.ts`.
+    *   Updated `build` script in `package.json` to include `prisma migrate deploy`.
+    *   Committed changes.
+*   **4/6/2025, 5:11:39 PM UTC** - **Debugged Auth & Background Issues:**
+    *   Fixed `SKIP_AUTH_IN_DEV` logic by adding non-public variable to `.env` and restarting dev server. Confirmed `/admin` loads posts in dev mode.
+    *   Troubleshot invisible global background SVG; reverted global implementation attempt and restored background to only `app/page.tsx`.
+*   **4/6/2025, 8:21:12 PM UTC** - **Applied Light Theme Styling (Phase 1):**
+    *   Removed grid overlay from `BackgroundSVG` component.
+    *   Changed `app/page.tsx` background/text colors to light theme.
+    *   Applied styles from `STYLE_GUIDE.md` to Admin Portal layout, side nav, post editor inputs/buttons, blog post card, blog list search/filters, and single blog post page.
+    *   Fixed various syntax errors caused by `apply_diff` tool.

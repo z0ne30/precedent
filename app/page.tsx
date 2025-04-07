@@ -11,7 +11,7 @@ const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ss
 
 export default function Home() {
   // State for cycling text
-  const subtitles = ["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"];
+  const subtitles = ["drawn to the difficult things", "half a dev", "perpetual learner"];
   // Removed manual scramble state and effects  
 
   // Define colors
@@ -65,8 +65,8 @@ export default function Home() {
         {/* Animated Subtitle using ScramblingText component */}
         <motion.div variants={itemVariants}> {/* Wrapper for entrance animation */}
           <ScramblingText
-            texts={["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"]}
-            interval={3000} // Change text every 3 seconds
+            texts={subtitles}
+            interval={4000} // Change text every 3 seconds
             className="inline-block text-xl md:text-2xl mb-16 text-gray-600" // Adjust subtitle for light bg
           />
         </motion.div>
@@ -77,9 +77,9 @@ export default function Home() {
           variants={itemVariants}
         >
           {/* Adjust link colors for light bg */}
-          <a data-cursor-magnetic href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>GitHub</a>
-          <a data-cursor-magnetic href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Project Site</a>
-          <a data-cursor-magnetic href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
+          <a data-cursor-magnetic href="https://launchyard.xyz" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Launch Yard</a>
+          <a data-cursor-magnetic href="https://www.linkedin.com/in/enyu-rao/" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>LinkedIn</a>
+          <a data-cursor-magnetic href="https://twitter.com/0xhappier" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
           <Link data-cursor-magnetic href="/blog" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Blog</Link>
           <Link data-cursor-magnetic href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
         </motion.nav>

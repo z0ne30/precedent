@@ -8,7 +8,6 @@ export const revalidate = 60;
 
 async function getTags() {
   // Fetch all unique tags
-  // Use prisma directly
   try {
     const tags = await prisma.tag.findMany({
       select: { name: true },
@@ -25,10 +24,8 @@ async function getTags() {
 async function getPosts(selectedTag?: string, searchQuery?: string) {
   // Use prisma directly
   try {
-    // Build an array of conditions for an explicit AND
     const whereConditions: any[] = [{ published: true }];
 
-    // If a tag is selected, add its condition to the array
     if (selectedTag) {
       whereConditions.push({
         tags: {
@@ -39,22 +36,17 @@ async function getPosts(selectedTag?: string, searchQuery?: string) {
       });
     }
 
-    // If a search query is provided, add its OR condition to the array
     if (searchQuery) {
       whereConditions.push({
         OR: [
-          { title: { contains: searchQuery, mode: 'insensitive' } }, // Case-insensitive search
+          { title: { contains: searchQuery, mode: 'insensitive' } },
           { content: { contains: searchQuery, mode: 'insensitive' } },
         ],
       });
     }
 
-    // Log the final where clause for debugging
-    console.log(">>> Prisma where clause:", JSON.stringify({ AND: whereConditions }, null, 2));
-
     const posts = await prisma.post.findMany({
-      // Use the explicit AND condition
-      where: { AND: whereConditions }, // This is the query being executed
+      where: { AND: whereConditions },
       orderBy: { createdAt: 'desc' },
       include: {
         tags: {
@@ -62,7 +54,6 @@ async function getPosts(selectedTag?: string, searchQuery?: string) {
         },
       },
     });
-    console.log(`>>> Found ${posts.length} posts.`); // Log the number of posts found
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts for blog page:", error);
@@ -74,22 +65,19 @@ async function getPosts(selectedTag?: string, searchQuery?: string) {
 export default async function BlogPage({
   searchParams,
 }: {
-  // Add 'q' for search query
   searchParams?: { tag?: string; q?: string };
 }) {
   const selectedTag = searchParams?.tag;
   const searchQuery = searchParams?.q;
-  // Fetch posts based on selected tag and search query (if any)
   const posts = await getPosts(selectedTag, searchQuery);
-  // Fetch all tags for the filter UI
   const tags = await getTags();
 
-  // Define colors consistent with landing page theme (keep for page background/title)
-  // Colors for page title and links
-  const primaryTextColor = "text-gray-900"; // Assuming light theme now
-  const accentColor = "text-teal-600"; // Darker teal for links on light bg
-  // Button/Input styles applied directly below
+  // Define colors consistent with light theme
+  const primaryTextColor = "text-gray-900";
+  const accentColor = "text-teal-600";
+
   return (
+    // Apply light theme text color
     <div className={`min-h-screen ${primaryTextColor} p-8`}>
       <div className="max-w-4xl mx-auto">
         <h1 className={`text-4xl md:text-5xl font-bold mb-8 text-center ${accentColor}`}>
@@ -106,13 +94,15 @@ export default async function BlogPage({
           <div className="flex-grow w-full md:w-1/2 flex gap-2">
              <label htmlFor="search" className="sr-only">Search Posts</label>
              <input
-               name="q" // Name attribute for form submission
+               name="q"
                type="search"
                id="search"
                placeholder="Search posts..."
-               defaultValue={searchQuery || ''} // Pre-fill from URL
+               defaultValue={searchQuery || ''}
+               // Apply Input Field Style
                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
              />
+             {/* Apply Primary Action Button Style */}
              <button type="submit" className={`px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors whitespace-nowrap`}>
                Search
              </button>
@@ -121,8 +111,9 @@ export default async function BlogPage({
           {/* Tag Filtering Links */}
           <div className="flex flex-wrap gap-2 justify-center md:justify-end">
              <Link
-               data-cursor-magnetic // Add attribute
+               data-cursor-magnetic
                href="/blog"
+               // Style for "All Posts" tag link
                className={`text-sm px-3 py-1 rounded-full transition-colors border ${
                  !selectedTag
                    ? 'bg-teal-500 text-white border-teal-500' // Active style
@@ -133,10 +124,10 @@ export default async function BlogPage({
              </Link>
             {tags.map((tag) => (
               <Link
-                data-cursor-magnetic // Add attribute
+                data-cursor-magnetic
                 key={tag.name}
-                // Preserve search query when clicking tags if needed, or clear it
                 href={`/blog?tag=${encodeURIComponent(tag.name)}${searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : ''}`}
+                // Style for individual tag links
                 className={`text-sm px-3 py-1 rounded-full transition-colors border ${
                   selectedTag === tag.name
                     ? 'bg-teal-500 text-white border-teal-500' // Active style
@@ -155,7 +146,6 @@ export default async function BlogPage({
             <p className="text-center text-gray-400">No posts published yet.</p>
           )}
           {posts.map((post) => (
-            // Use the PostCard component
             <PostCard key={post.id} post={post} />
           ))}
         </div>

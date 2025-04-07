@@ -84,3 +84,49 @@
 3.  **Subtle Microinteractions & Animations:** Use Framer Motion for non-jarring hover, focus, loading, and click feedback.
 4.  **Consistent & Purposeful Iconography:** Use a single clean set (e.g., Lucide Icons) consistently and meaningfully.
 5.  **Clear Visual Hierarchy through Typography:** Establish and adhere to a clear typographic scale (size, weight).
+
+---
+
+## Background Effects
+
+### UI Effect Specification: Ambient Fluid Orb Background
+
+1.  **Effect Name:** Ambient Fluid Orb Background
+
+2.  **Goal/Intent:** To create a subtle, dynamic, and visually engaging background layer that adds depth and ambient interest. This effect should remain secondary to the primary foreground content and the existing SVG node network design, enhancing the modern aesthetic without causing distraction.
+
+3.  **Visual Description:**
+    *   **Elements:** Features 1 to 3 large, amorphous, blob-like shapes (orbs).
+    *   **Edges:** Orbs possess very soft, heavily blurred edges (like a significant Gaussian blur or smooth radial gradients fading to full transparency). No hard outlines.
+    *   **Glow:** Each orb emits a soft, subtle internal glow. The glow intensity should be noticeable but not overpowering, creating a gentle luminosity rather than a harsh light source effect. The intensity should remain relatively constant throughout the animation, avoiding distracting pulsing or flashing. The glow is brightest at the orb's core and feathers out smoothly towards the blurred edges.
+    *   **Shape & Form:** Organic, slightly irregular, potentially undulating subtly over time.
+    *   **Opacity:** Low overall opacity (e.g., 15-30%) to remain behind foreground elements and the node network.
+
+4.  **Animation Behavior:**
+    *   **Movement:** Slow, continuous, fluid drifting across the viewport.
+    *   **Path:** Non-linear, organic/pseudo-random, evoking a lava lamp feel. Avoid straight lines or repetitive patterns.
+    *   **Speed:** Consistently slow and relaxed; individual orbs may vary slightly.
+    *   **Interaction (Multiple Orbs):** Independent paths; orbs pass through each other (unless advanced merging/splitting is implemented).
+    *   **Boundary Interaction:** Graceful animation in/out of view or smooth reflection off boundaries.
+
+5.  **Layering & Positioning:**
+    *   **Stacking Order:** Positioned absolutely behind all primary content and the SVG node network (lowest visual layer, e.g., `z-index: -10`).
+    *   **Coverage:** Spans the entire background viewport area.
+
+6.  **Color Palette & Transitions:**
+    *   **Orb Base Colors:** Orbs should utilize soft, desaturated colors derived from or complementary to the application's primary theme (e.g., soft teals, blues, potentially purples like `#A5F3FC`, `#A7F3D0`, `#C7D2FE` used at low opacity). Each orb maintains its distinct base color throughout its lifecycle.
+    *   **Color Transitions:** There are **no abrupt color changes** within an orb. Any internal color variation comes solely from the central glow effect.
+    *   **Overlap Blending:** When orbs overlap, their semi-transparent colors should blend naturally based on standard alpha compositing (like layers of colored glass). The overlapping area will appear as a mix of the two orb colors, potentially becoming slightly more opaque or resulting in a new intermediate color depending on the specific base colors and opacities used. Avoid specific blend modes like "screen," "multiply," or "overlay" unless explicitly desired for a particular artistic effect; the default alpha blending is preferred for subtlety.
+    *   **Glow Color:** The inner glow effect should be a slightly lighter tint or pure white (`#FFFFFF`) version of the orb's base color, also at low opacity, contributing to the overall orb color but brightest at the center.
+
+7.  **Performance Considerations:**
+    *   Must be highly performant. Utilize hardware acceleration (CSS `transform`, `opacity`). Avoid expensive animations.
+
+8.  **Implementation Notes (for Developers):**
+    *   Consider CSS animations with complex `@keyframes` for simpler path variations.
+    *   JavaScript animation libraries (e.g., GSAP) can provide more control over complex, non-linear paths but require careful performance management.
+    *   HTML Canvas 2D API offers flexibility for drawing blurred shapes and managing more complex pathfinding or interactions.
+    *   WebGL shaders provide the highest potential for performance and visual fidelity (e.g., using noise functions like Perlin or Simplex for organic movement, implementing blur/glow effects efficiently) but come with increased implementation complexity.
+
+9.  **Advanced Features (Optional):**
+    *   Fluid merging/splitting of orbs for enhanced effect (likely requires Canvas/WebGL).
