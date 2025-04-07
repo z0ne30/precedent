@@ -1,22 +1,15 @@
 'use client'; // Make this a client component
 
 import Link from "next/link";
-import { useState, useEffect } from 'react'; // Add useState, useEffect
-// Removed duplicate Link import
-import { motion } from 'framer-motion'; // Remove AnimatePresence import
-// import BackgroundSVG from './components/background'; // Removed - Handled by layout
-// Import ScramblingText dynamically
+import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
+// Import Image from next/image for optimized image handling
+import Image from 'next/image';
 const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ssr: false });
 
 export default function Home() {
-  // State for cycling text
   const subtitles = ["drawn to the difficult things", "half a dev", "perpetual learner"];
-  // Removed manual scramble state and effects  
-
-  // Define colors
-  // const backgroundColor = "bg-gray-900"; // Remove page-specific background
-  const primaryTextColor = "text-gray-900"; // Set text for light background
+  const primaryTextColor = "text-gray-900";
   const accentColor = "text-teal-400";
 
   // Framer Motion Variants
@@ -41,12 +34,12 @@ export default function Home() {
 
 
   return (
-    // Main container
+    // Main container - Reverted to justify-center, remains relative for footer positioning
     <div className={`relative flex min-h-screen flex-col items-center justify-center ${primaryTextColor} p-8 overflow-hidden`}>
 
+      {/* Main Content Area */}
       <motion.div
-        className="z-10 w-full max-w-5xl text-center"
-        // Increased max-width
+        className="z-10 w-full max-w-5xl text-center" // Removed wrapper div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -57,7 +50,7 @@ export default function Home() {
         >
           Enyu Rao
         </motion.h1>
-        <motion.div variants={itemVariants}> 
+        <motion.div variants={itemVariants}>
           <ScramblingText
             texts={subtitles}
             interval={4000} // Change text every 3 seconds
@@ -67,21 +60,49 @@ export default function Home() {
 
         {/* Navigation Links */}
         <motion.nav
-          className="flex justify-center space-x-4 md:space-x-6" // Increased margin
+          className="flex justify-center items-center space-x-4 md:space-x-6" // Added items-center
           variants={itemVariants}
         >
-          {/* Adjust link colors for light bg */}
+          {/* Standard Links */}
           <a data-cursor-magnetic href="https://launchyard.xyz" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Launch Yard</a>
           <a data-cursor-magnetic href="https://www.linkedin.com/in/enyu-rao/" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>LinkedIn</a>
           <a data-cursor-magnetic href="https://twitter.com/0xhappier" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
           <Link data-cursor-magnetic href="/blog" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Blog</Link>
-          <Link data-cursor-magnetic href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
+          {/* Responsive Contact Link */}
+          <Link data-cursor-magnetic href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 hidden md:inline-block`}>Contact</Link>
         </motion.nav>
 
       </motion.div> {/* Closing tag for main content motion.div */}
 
-      {/* Optional: Footer or other elements can go here */}
+      {/* Contact Link for Mobile (Positioned relative to main content) */}
+      <motion.div
+        className="md:hidden mt-16 text-center w-full" // Show only on mobile, add margin, center text, full width for centering
+        variants={itemVariants} // Apply animation variants
+      >
+        <Link data-cursor-magnetic href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
+      </motion.div>
 
+      {/* Spotify Link (Footer) - Absolutely Positioned */}
+      <div className="absolute bottom-0 left-0 right-0 pb-8 w-full flex justify-center"> {/* Absolute positioning */}
+        <a
+          data-cursor-magnetic
+          href="https://open.spotify.com/user/nathan.rao2000?" // Using the originally provided URL
+          target="_blank"
+          rel="noopener noreferrer"
+          className="opacity-75 hover:opacity-100 transition-opacity duration-200" // Added hover effect
+          aria-label="Spotify Profile" // Accessibility
+        >
+          {/* Using Next.js Image component for optimization, pointing to external SVG */}
+          {/* Note: External image URLs need to be configured in next.config.js */}
+          <Image
+            src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" // Example external SVG URL
+            alt="Spotify Logo"
+            width={28} // Set width (corresponds to h-7)
+            height={28} // Set height (corresponds to w-7)
+            className="filter hover:brightness-110" // Optional: slight brightness change on hover
+          />
+        </a>
+      </div>
     </div> // Closing tag for main container div
   );
 }
