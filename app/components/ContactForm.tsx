@@ -13,14 +13,17 @@ export default function ContactForm() {
   const [feedbackMessage, setFeedbackMessage] = useState('');
 
   // Define colors (could be passed as props or use context/theme later)
-  const primaryTextColor = "text-white";
-  const accentColor = "text-teal-400";
+  // Light theme colors
+  const primaryTextColor = "text-gray-900"; // Dark text for inputs/form
+  const labelTextColor = "text-gray-700";   // Slightly lighter for labels
+  const accentColor = "text-teal-500";      // Adjusted accent for light bg
   const buttonBgColor = "bg-teal-600";
   const buttonHoverBgColor = "hover:bg-teal-700";
-  const inputBgColor = "bg-gray-800"; // Assuming dark theme context
-  const inputBorderColor = "border-gray-700";
-  const successColor = "text-green-400";
-  const errorColor = "text-red-400";
+  const buttonTextColor = "text-white";     // Keep button text white
+  const inputBgColor = "bg-white";          // White input background
+  const inputBorderColor = "border-gray-300"; // Lighter border
+  const successColor = "text-green-600";    // Darker green for light bg
+  const errorColor = "text-red-600";        // Darker red for light bg
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,11 +59,11 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg">
+    <div className="w-full max-w-md mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold mb-6 text-center">Contact Me</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1 text-left">Name</label>
+          <label htmlFor="name" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Name</label>
           <input
             type="text"
             name="name"
@@ -72,7 +75,7 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1 text-left">Email</label>
+          <label htmlFor="email" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Email</label>
           <input
             type="email"
             name="email"
@@ -84,7 +87,7 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1 text-left">Message</label>
+          <label htmlFor="message" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Message</label>
           <textarea
             name="message"
             id="message"
@@ -100,7 +103,7 @@ export default function ContactForm() {
             data-cursor-magnetic // Add attribute
             type="submit"
             disabled={status === 'loading'}
-            className={`w-full py-2 px-4 ${buttonBgColor} ${primaryTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`w-full py-2 px-4 ${buttonBgColor} ${buttonTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {status === 'loading' ? 'Sending...' : 'Send Message'}
           </button>
