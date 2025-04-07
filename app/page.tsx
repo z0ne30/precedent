@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from 'react'; // Add useState, useEffect
 // Removed duplicate Link import
 import { motion } from 'framer-motion'; // Remove AnimatePresence import
-import BackgroundSVG from './components/background'; // Import the background SVG component using relative path
+// import BackgroundSVG from './components/background'; // Removed - Handled by layout
 // Import ScramblingText dynamically
 import dynamic from 'next/dynamic';
 const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ssr: false });
@@ -12,11 +12,11 @@ const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ss
 export default function Home() {
   // State for cycling text
   const subtitles = ["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"];
-  // Removed manual scramble state and effects
+  // Removed manual scramble state and effects  
 
   // Define colors
-  const backgroundColor = "bg-white"; // Change to light background
-  const primaryTextColor = "text-gray-900"; // Change to dark text
+  // const backgroundColor = "bg-gray-900"; // Remove page-specific background
+  const primaryTextColor = "text-gray-900"; // Set text for light background
   const accentColor = "text-teal-400";
 
   // Framer Motion Variants
@@ -39,24 +39,11 @@ export default function Home() {
     },
   };
 
-  // Removed slideTextVariants and slideTextTransition
 
   return (
     // Main container
-    <div className={`relative flex min-h-screen flex-col items-center justify-center ${backgroundColor} ${primaryTextColor} p-8 overflow-hidden`}>
+    <div className={`relative flex min-h-screen flex-col items-center justify-center ${primaryTextColor} p-8 overflow-hidden`}>
 
-      {/* Container for SVG layers */}
-      <div className="absolute inset-0 z-0">
-        {/* Base subtle background */}
-        <BackgroundSVG />
-        {/* Brighter reveal layer - initially masked */}
-        <BackgroundSVG
-          className="cursor-reveal-layer" // Class for CSS targeting
-          // Optionally pass props to make this version brighter/different if needed
-        />
-      </div> {/* Closing tag for SVG container */}
-
-      {/* Main Content Area - Animated */}
       <motion.div
         className="z-10 w-full max-w-5xl text-center"
         // Increased max-width
@@ -66,7 +53,7 @@ export default function Home() {
       >
         {/* Heading */}
         <motion.h1
-          className={`font-orbitron text-4xl md:text-8xl font-bold mb-12 ${accentColor}`}
+          className={`font-orbitron text-5xl md:text-9xl font-bold mb-16 ${accentColor}`}
           // Increased size and margin
           variants={itemVariants}
         >
@@ -80,17 +67,16 @@ export default function Home() {
           <ScramblingText
             texts={["Full-Stack Developer", "UI/UX Enthusiast", "Lifelong Learner"]}
             interval={3000} // Change text every 3 seconds
-            className="text-lg md:text-xl mb-20 text-gray-600" // Adjust subtitle color for light bg
+            className="inline-block text-xl md:text-2xl mb-16 text-gray-600" // Adjust subtitle for light bg
           />
         </motion.div>
 
         {/* Navigation Links */}
         <motion.nav
-          className="mb-20 flex justify-center space-x-4 md:space-x-6" // Increased margin
+          className="flex justify-center space-x-4 md:space-x-6" // Increased margin
           variants={itemVariants}
         >
-          {/* Added back missing links and removed magnetic attributes */}
-          {/* Adjust link hover color for light bg */}
+          {/* Adjust link colors for light bg */}
           <a data-cursor-magnetic href="https://github.com/your-username" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>GitHub</a>
           <a data-cursor-magnetic href="https://your-project.com" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Project Site</a>
           <a data-cursor-magnetic href="https://twitter.com/your-handle" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>

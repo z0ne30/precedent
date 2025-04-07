@@ -24,3 +24,7 @@ This plan outlines the steps to integrate Prisma ORM into the Next.js project us
 8.  **Create Prisma Client Singleton:** Implement a reusable Prisma Client instance in `lib/prisma.ts`.
 9.  **Create Test API Route:** Build a basic Next.js API route (`app/api/test-db/route.ts`) to demonstrate a simple database interaction (e.g., creating or fetching a user).
 10. **Test API Route:** Verify the API route functions correctly.
+
+**Phase D: Future UI Enhancements (TODO)**
+
+11. **Integrate User Photo:** Implement subtle background integration for user photo (Option B from discussion). Requires photo file and styling details.
