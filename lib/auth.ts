@@ -73,3 +73,29 @@ export const authOptions: AuthOptions = {
   },
   // debug: process.env.NODE_ENV === 'development', // Uncomment for debugging if needed
 };
+
+// Helper function to require admin session in API routes
+import { getServerSession } from "next-auth/next";
+import { NextResponse } from 'next/server';
+
+export async function requireAdminSession() {
+  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
+
+  if (skipAuth) {
+    console.log("⚠️ Skipping auth check in DEV mode.");
+    return null; // Indicate auth was skipped
+  }
+
+  const session = await getServerSession(authOptions);
+
+  if (!session || !session.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (session.user.isAdmin !== true) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  // If checks pass, return the session object
+  return session;
+}

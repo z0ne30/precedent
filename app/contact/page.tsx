@@ -4,18 +4,19 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react'; // Import useState
 import { getCalApi } from "@calcom/embed-react"; // Import getCalApi
 import ContactForm from '../components/ContactForm';
+import PageLayout from '../components/PageLayout'; // Import PageLayout
 
 export default function ContactPage() {
   // State to track modal status (optional, but good practice)
   const [isCalModalOpen, setIsCalModalOpen] = useState(false);
 
   // Define colors consistent with theme
-  const primaryTextColor = "text-gray-900"; // Use dark text for light background
-  const accentColor = "text-teal-400";
-  const buttonBgColor = "bg-teal-500";
-  const buttonHoverBgColor = "hover:bg-teal-600";
-  const buttonTextColor = "text-white";
-
+  // Colors defined here might be less necessary if styles are centralized later
+  // const primaryTextColor = "text-gray-900"; // Use dark text for light background
+  const accentColor = "text-teal-400"; // Keep for link hover
+  const buttonBgColor = "bg-teal-500"; // Keep for button, or move to globals.css
+  const buttonHoverBgColor = "hover:bg-teal-600"; // Keep for button, or move to globals.css
+  const buttonTextColor = "text-white"; // Keep for button, or move to globals.css
   // Initialize Cal.com embed UI settings and add callbacks
   useEffect(() => {
     let isMounted = true; // Flag to prevent state updates on unmounted component
@@ -91,10 +92,9 @@ export default function ContactPage() {
   }, []); // Empty dependency array ensures this runs once on mount
 
   return (
-    <div className={`flex min-h-screen flex-col items-center ${primaryTextColor} p-8`}>
-      <div className="w-full max-w-3xl">
-        <h1 className="font-orbitron text-5xl md:text-6xl text-teal-400 text-center mb-8 md:mb-10">Get In Touch</h1>
-
+    // Use PageLayout, passing the title
+    <PageLayout title="Get In Touch">
+      {/* Removed outer divs and h1, PageLayout handles container and title */}
         {/* Centered Contact Form Container */}
         <div className="w-full max-w-md mx-auto mb-8">
            <ContactForm /> {/* ContactForm component */}
@@ -106,19 +106,15 @@ export default function ContactPage() {
             data-cursor-magnetic // Add magnetic effect
             data-cal-link="enyu-rao"
             data-cal-config='{"theme":"light"}' // Ensure theme consistency
-            className={`px-6 py-3 rounded-md ${buttonBgColor} ${buttonTextColor} ${buttonHoverBgColor} font-semibold transition-colors duration-200 shadow-md hover:shadow-lg inline-block`} // Use inline-block for centering via text-center
+            // Apply standardized button classes, keep inline-block for centering
+            className="btn btn-primary inline-block"
           >
             Book a Meeting
           </button>
         </div>
 
-        {/* Link back to Home */}
-        <div className="mt-12 text-center">
-          <Link data-cursor-magnetic href="/" className={`hover:${accentColor} transition-colors text-lg`}>
-            &larr; Back to Home
-          </Link>
-        </div>
-      </div>
-    </div>
+        {/* Removed "Back to Home" link as Header provides navigation */}
+      {/* Removed closing divs for outer containers */}
+    </PageLayout>
   );
 }

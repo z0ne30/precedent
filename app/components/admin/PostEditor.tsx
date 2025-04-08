@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Post, Tag } from '@prisma/client'; // Assuming types are available
+import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown for preview
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation'; // For potential refresh/redirect after delete
 
@@ -29,7 +30,8 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
   const [slug, setSlug] = useState('');
   const [content, setContent] = useState('');
   const [published, setPublished] = useState(false);
-  const [tagInput, setTagInput] = useState(''); // Simple comma-separated input for now
+  const [tagInput, setTagInput] = useState(''); // For the input field where user types a new tag
+  const [currentTags, setCurrentTags] = useState<string[]>([]); // State for the array of tags
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showPreview, setShowPreview] = useState(false); // State for preview toggle
 
   // Fetch post data when postId changes
   useEffect(() => {
@@ -47,6 +50,7 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
       setContent('');
       setPublished(false);
       setTagInput('');
+      setCurrentTags([]); // Clear tags array
       setError(null);
       setSaveStatus('idle');
       return;
@@ -70,7 +74,8 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
         setSlug(data.slug);
         setContent(data.content);
         setPublished(data.published);
-        setTagInput(data.tags.map(tag => tag.name).join(', ')); // Populate tag input
+        // setTagInput(data.tags.map(tag => tag.name).join(', ')); // Don't populate input, populate array
+        setCurrentTags(data.tags.map(tag => tag.name)); // Populate tags array
       } catch (err: any) {
         console.error(err);
         setError(err.message || 'An unknown error occurred');
@@ -110,7 +115,8 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
       setSlug(updatedPost.slug);
       setContent(updatedPost.content);
       setPublished(updatedPost.published);
-      setTagInput(updatedPost.tags.map(tag => tag.name).join(', '));
+      // setTagInput(updatedPost.tags.map(tag => tag.name).join(', ')); // Don't update input, update array
+      setCurrentTags(updatedPost.tags.map(tag => tag.name)); // Update tags array from response
       setSaveStatus('saved');
       onPostUpdate?.(); // Notify parent to potentially refresh list
       // Clear saved status after a delay
@@ -146,12 +152,30 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
     debouncedSave({ published: e.target.checked });
   };
 
-   const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTagInput = e.target.value;
-    setTagInput(newTagInput);
-    // Split, trim, and filter empty tags before sending
-    const tagNames = newTagInput.split(',').map(t => t.trim()).filter(Boolean);
-    debouncedSave({ tagNames });
+  // Handle changes in the tag *input* field
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(e.target.value);
+  };
+
+  // Add a tag when Enter is pressed in the input
+  const handleAddTagOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission if wrapped in form
+      const newTag = tagInput.trim();
+      if (newTag && !currentTags.includes(newTag)) {
+        const updatedTags = [...currentTags, newTag];
+        setCurrentTags(updatedTags);
+        debouncedSave({ tagNames: updatedTags }); // Save the updated array
+      }
+      setTagInput(''); // Clear the input field
+    }
+  };
+
+  // Remove a tag when its 'x' button is clicked
+  const handleRemoveTag = (tagToRemove: string) => {
+    const updatedTags = currentTags.filter(tag => tag !== tagToRemove);
+    setCurrentTags(updatedTags);
+    debouncedSave({ tagNames: updatedTags }); // Save the updated array
   };
 
   // Delete handler
@@ -218,7 +242,8 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
             data-cursor-magnetic // Add attribute
             onClick={handleDelete}
             disabled={isDeleting}
-            className="px-4 py-2 bg-red-400 text-white rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 transition-colors"
+            // Apply base btn style, add specific red colors for delete action
+            className="btn bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 shadow-md hover:shadow-lg active:bg-red-700 active:shadow-inner"
           >
             {isDeleting ? 'Deleting...' : 'Delete Post'}
           </button>
@@ -235,53 +260,86 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
 
       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}> {/* Prevent default form submission */}
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+          <label htmlFor="title" className="form-label dark:text-gray-300">Title</label> {/* Use form-label */}
           <input
             type="text"
             id="title"
             value={title}
             onChange={handleTitleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
+            className="form-input dark:bg-gray-700 dark:border-gray-600 dark:text-white" // Use form-input, add dark mode styles if needed
             placeholder="Post Title"
           />
         </div>
 
         <div>
-          <label htmlFor="slug" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Slug</label>
+          <label htmlFor="slug" className="form-label dark:text-gray-300">Slug</label> {/* Use form-label */}
           <input
             type="text"
             id="slug"
             value={slug}
             onChange={handleSlugChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
+            className="form-input dark:bg-gray-700 dark:border-gray-600 dark:text-white" // Use form-input
             placeholder="post-slug"
           />
         </div>
 
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</label>
-          <textarea
-            id="content"
-            rows={15}
-            value={content}
-            onChange={handleContentChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900 font-mono"
-            placeholder="Write your post content here (Markdown supported)..."
-          />
-           {/* TODO: Add Markdown preview option */}
+          <div className="flex justify-between items-center mb-1">
+             <label htmlFor="content" className="form-label dark:text-gray-300 !mb-0">Content</label> {/* Use form-label, remove margin */}
+             <button
+               type="button"
+               onClick={() => setShowPreview(!showPreview)}
+               className="text-xs px-2 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-1 focus:ring-teal-500"
+             >
+               {showPreview ? 'Edit' : 'Preview'}
+             </button>
+          </div>
+          {showPreview ? (
+             // Apply prose styles for Markdown rendering, match dark mode if needed
+             <div className="prose dark:prose-invert max-w-none p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 min-h-[300px] overflow-y-auto">
+               <ReactMarkdown>{content || '*Preview appears here*'}</ReactMarkdown>
+             </div>
+           ) : (
+             <textarea
+               id="content"
+               rows={15}
+               value={content}
+               onChange={handleContentChange}
+               className="form-input dark:bg-gray-700 dark:border-gray-600 dark:text-white font-mono" // Use form-input
+               placeholder="Write your post content here (Markdown supported)..."
+             />
+           )}
         </div>
 
          <div>
-          <label htmlFor="tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tags (comma-separated)</label>
-          <input
-            type="text"
-            id="tags"
-            value={tagInput}
-            onChange={handleTagInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900"
-            placeholder="e.g., react, nextjs, webdev"
-          />
-        </div>
+          <div>
+            <label htmlFor="tag-input" className="form-label dark:text-gray-300">Tags</label>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {currentTags.map((tag) => (
+                <span key={tag} className="flex items-center bg-teal-100 dark:bg-teal-800 text-teal-800 dark:text-teal-100 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag)}
+                    className="ml-1.5 text-teal-500 dark:text-teal-300 hover:text-teal-700 dark:hover:text-teal-100 focus:outline-none"
+                    aria-label={`Remove ${tag}`}
+                  >
+                    &times; {/* Multiplication sign as 'x' */}
+                  </button>
+                </span>
+              ))}
+            </div>
+            <input
+              type="text"
+              id="tag-input"
+              value={tagInput}
+              onChange={handleTagInputChange}
+              onKeyDown={handleAddTagOnEnter}
+              className="form-input dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="Type a tag and press Enter..."
+            />
+          </div> {/* Add missing closing div for the tag section container */}
+          </div>
 
         <div className="flex items-center justify-between">
            <div className="flex items-center">
@@ -293,7 +351,8 @@ export default function PostEditor({ postId, onPostUpdate }: PostEditorProps) {
                onChange={handlePublishedChange}
                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
              />
-             <label htmlFor="published" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">
+             {/* Use form-label styling for consistency, adjust margin/display */}
+             <label htmlFor="published" className="form-label ml-2 !mb-0 dark:text-gray-100"> {/* Override mb-1 from form-label */}
                Published
              </label>
            </div>

@@ -63,13 +63,13 @@ export default function Home() {
           className="flex justify-center items-center space-x-4 md:space-x-6" // Added items-center
           variants={itemVariants}
         >
-          {/* Standard Links */}
-          <a data-cursor-magnetic href="https://launchyard.xyz" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Launch Yard</a>
-          <a data-cursor-magnetic href="https://www.linkedin.com/in/enyu-rao/" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>LinkedIn</a>
-          <a data-cursor-magnetic href="https://twitter.com/0xhappier" target="_blank" rel="noopener noreferrer" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Twitter</a>
-          <Link data-cursor-magnetic href="/blog" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Blog</Link>
-          {/* Responsive Contact Link */}
-          <Link data-cursor-magnetic href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 hidden md:inline-block`}>Contact</Link>
+          {/* Standard Links - Apply new hover class */}
+          <a data-cursor-magnetic href="https://launchyard.xyz" target="_blank" rel="noopener noreferrer" className="nav-link-hover-scale">Launch Yard</a>
+          <a data-cursor-magnetic href="https://www.linkedin.com/in/enyu-rao/" target="_blank" rel="noopener noreferrer" className="nav-link-hover-scale">LinkedIn</a>
+          <a data-cursor-magnetic href="https://twitter.com/0xhappier" target="_blank" rel="noopener noreferrer" className="nav-link-hover-scale">Twitter</a>
+          <Link data-cursor-magnetic href="/blog" className="nav-link-hover-scale">Blog</Link>
+          {/* Responsive Contact Link - Apply new hover class */}
+          <Link data-cursor-magnetic href="/contact" className="nav-link-hover-scale hidden md:inline-block">Contact</Link>
         </motion.nav>
 
       </motion.div> {/* Closing tag for main content motion.div */}
@@ -79,7 +79,7 @@ export default function Home() {
         className="md:hidden mt-16 text-center w-full" // Show only on mobile, add margin, center text, full width for centering
         variants={itemVariants} // Apply animation variants
       >
-        <Link data-cursor-magnetic href="/contact" className={`text-gray-700 hover:text-teal-600 transition-colors transition-transform duration-200 hover:scale-110 inline-block`}>Contact</Link>
+        <Link data-cursor-magnetic href="/contact" className="nav-link-hover-scale">Contact</Link> {/* Apply new hover class */}
       </motion.div>
 
       {/* Spotify Link (Footer) - Absolutely Positioned */}

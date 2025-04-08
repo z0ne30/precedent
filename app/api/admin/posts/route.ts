@@ -1,28 +1,19 @@
 import { NextResponse } from 'next/server';
 // import { auth } from '@clerk/nextjs/server'; // Remove Clerk import
-import { getServerSession } from "next-auth/next"; // Import NextAuth session utility
-import { authOptions } from "@/lib/auth"; // Import from shared auth file
+// import { getServerSession } from "next-auth/next"; // No longer needed directly here
+import { authOptions, requireAdminSession } from "@/lib/auth"; // Import helper
 import { prisma } from '@/lib/prisma';
+import { z } from 'zod'; // Import Zod
 
 // GET handler for fetching all posts (for admin list)
 export async function GET(request: Request) {
-  let session = null;
-  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
-
-  if (!skipAuth) {
-    session = await getServerSession(authOptions); // Get session using NextAuth
-
-    // Check if user is authenticated
-    if (!session || !session.user) { // Check for session and user object
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    // Check if user is admin
-    if (session.user.isAdmin !== true) {
-       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-  } else {
-    console.log("⚠️ Skipping auth check in DEV mode for /api/admin/posts GET");
+  // Use the helper function for auth check
+  const authResult = await requireAdminSession();
+  if (authResult instanceof NextResponse) {
+    return authResult; // Return error response if auth failed/skipped handled by helper
   }
+  // If auth passed (and wasn't skipped), authResult is the session object (or null if skipped)
+  const session = authResult; // Can use session if needed later
 
   try {
     const posts = await prisma.post.findMany({
@@ -44,34 +35,39 @@ export async function GET(request: Request) {
 
 // POST handler for creating a new post
 export async function POST(request: Request) {
-  let session = null; // Redefine for scope if needed, or reuse if possible
-  const skipAuth = process.env.NODE_ENV === 'development' && process.env.SKIP_AUTH_IN_DEV === 'true';
-
-  if (!skipAuth) {
-    session = await getServerSession(authOptions); // Get session using NextAuth
-
-    // Check if user is authenticated
-    if (!session || !session.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    // Check if user is admin
-    if (session.user.isAdmin !== true) {
-       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-  } else {
-     console.log("⚠️ Skipping auth check in DEV mode for /api/admin/posts POST");
+  // Use the helper function for auth check
+  const authResult = await requireAdminSession();
+  if (authResult instanceof NextResponse) {
+    return authResult; // Return error response if auth failed/skipped handled by helper
   }
-  // TODO: If associating posts with users, use session.user.id
-  // const userId = session.user.id;
+  // If auth passed (and wasn't skipped), authResult is the session object (or null if skipped)
+  const session = authResult;
+  // TODO: If associating posts with users, use session?.user?.id;
+  // const userId = session?.user?.id;
+
+  // Define Zod schema for creating a post
+  const CreatePostSchema = z.object({
+    title: z.string().trim().min(1, { message: "Title is required." }),
+    slug: z.string().trim().min(1, { message: "Slug is required." })
+           // Add regex for basic slug format if desired: .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { message: "Slug must be lowercase alphanumeric with hyphens." })
+           ,
+    content: z.string().min(1, { message: "Content is required." }),
+    published: z.boolean().optional().default(false),
+    tagNames: z.array(z.string().trim().min(1)).optional().default([]), // Expect array of non-empty strings
+  });
 
   try {
     const body = await request.json();
-    const { title, slug, content, published, tagNames } = body; // Expect tagNames as an array of strings
 
-    // Basic validation
-    if (!title || !slug || !content) {
-      return NextResponse.json({ error: 'Missing required fields (title, slug, content)' }, { status: 400 });
+    // Validate input using Zod
+    const validationResult = CreatePostSchema.safeParse(body);
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors.map(e => e.message).join(' ');
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
+
+    // Use validated and typed data
+    const { title, slug, content, published, tagNames } = validationResult.data;
 
     // Check if slug is unique
     const existingPost = await prisma.post.findUnique({ where: { slug } });
@@ -79,27 +75,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Slug must be unique' }, { status: 409 }); // Conflict
     }
 
-    // Prepare tag connections (upsert tags to avoid duplicates)
-    const tagConnections = tagNames && Array.isArray(tagNames)
-      ? await Promise.all(
-          tagNames.map(async (name: string) => {
-            const tag = await prisma.tag.upsert({
-              where: { name: name.trim() },
-              update: {},
-              create: { name: name.trim() },
-            });
-            return { id: tag.id };
-          })
-        )
-      : [];
+    // Prepare tag connections (upsert tags using validated tagNames)
+    const tagConnections = await Promise.all(
+      tagNames.map(async (name: string) => { // name is guaranteed to be a non-empty string here
+        const tag = await prisma.tag.upsert({
+          where: { name: name }, // Already trimmed by Zod
+          update: {},
+          create: { name: name },
+        });
+        return { id: tag.id };
+      })
+    );
 
     // Create the post
     const newPost = await prisma.post.create({
       data: {
-        title: title.trim(),
-        slug: slug.trim(),
-        content: content, // Keep content as is (assume markdown/rich text)
-        published: published ?? false, // Default to false if not provided
+        title: title, // Already trimmed by Zod
+        slug: slug,   // Already trimmed by Zod
+        content: content,
+        published: published, // Zod provides default
         tags: {
           connect: tagConnections, // Connect tags by their IDs
         },

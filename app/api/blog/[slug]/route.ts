@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+
+// Revalidate this API route's response every hour (adjust as needed)
+export const revalidate = 3600;
 import { prisma } from '@/lib/prisma';
 
 interface Params {

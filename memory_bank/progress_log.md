@@ -169,3 +169,74 @@
     *   Changed `app/page.tsx` background/text colors to light theme.
     *   Applied styles from `STYLE_GUIDE.md` to Admin Portal layout, side nav, post editor inputs/buttons, blog post card, blog list search/filters, and single blog post page.
     *   Fixed various syntax errors caused by `apply_diff` tool.
+*   **4/8/2025, 5:19:36 PM UTC** - **Implemented Prioritized UI Improvements:**
+    *   **Consistent Page Layouts:** Created reusable `PageLayout` component (`app/components/PageLayout.tsx`) with standard padding/max-width and integrated it into Contact (`app/contact/page.tsx`) and Blog Post (`app/(default)/blog/[slug]/page.tsx`) pages.
+    *   **Standardized Styles:** Defined base CSS classes (`.btn`, `.btn-primary`, `.form-input`, `.form-label`) in `app/globals.css` and refactored `ContactForm` component and Cal.com button to use them.
+    *   **Enhanced Microinteractions:** Added CSS hover effects for nav links (`.nav-link-hover-scale`), click feedback for buttons, transition effects for contact form feedback, and Framer Motion fade-in animation to `PageLayout`. Fixed syntax errors during implementation.
+*   **4/8/2025, 5:44:25 PM UTC** - **Implemented Global Navigation (Strategy Plan - Core #1):**
+    *   Created `Header` component (`app/components/Header.tsx`) with site branding and primary navigation links (Home, Blog, Contact).
+    *   Created `Footer` component (`app/components/Footer.tsx`) with copyright and social links.
+    *   Integrated `Header` and `Footer` into the root layout (`app/layout.tsx`) using a flexbox structure for proper positioning.
+    *   Removed redundant "Back" links from Contact and Blog Post pages.
+*   **4/8/2025, 6:03:50 PM UTC** - **Started Performance Tuning (Strategy Plan - Core #2):**
+    *   Installed `@next/bundle-analyzer`.
+    *   Configured `next.config.js` for bundle analysis.
+    *   Attempted build analysis, encountered build error related to `/blog/[slug]` route.
+    *   Debugged build error: Added detailed logging, simplified `generateStaticParams`, cleared `.next` cache. Error persisted.
+    *   Resolved build error by moving blog routes (`/blog/page.tsx`, `/blog/[slug]/page.tsx`) out of the `(default)` route group.
+    *   Successfully ran build analysis (`ANALYZE=true yarn build`).
+    *   Reviewed client bundle report: Identified `three.js` (via `VantaBackground`) as the largest dependency (~609 KB parsed).
+    *   Implemented optimization: Dynamically imported `VantaBackground` component in `app/layout.tsx` using `next/dynamic` with `ssr: false`.
+*   **4/8/2025, 6:08:38 PM UTC** - **Started Code Health & Refactor (Strategy Plan - Core #5):**
+    *   **Reviewed Contact API (`/api/contact/route.ts`):** Analyzed structure, validation, DB logic, email sending (Resend), and error handling.
+    *   **Refactored Validation:** Installed `zod`, defined `ContactFormSchema`, and replaced manual validation with `schema.safeParse()`. Inferred `ContactFormData` type.
+    *   **Refactored Configuration:** Added `CONTACT_SENDER_NAME`, `CONTACT_SENDER_EMAIL`, `CONTACT_NOTIFICATION_EMAIL` variables to `.env.example`. Updated API route to use `process.env` for these (requires user to set values in local `.env`).
+    *   **Reviewed Public Blog API (`/api/blog/**`):** Found routes clean and functional. Noted potential enhancements (pagination, server-side filtering, caching).
+    *   **Refactored Admin Blog API (`/api/admin/posts/**`):**
+        *   Abstracted auth logic into `requireAdminSession` helper in `lib/auth.ts`.
+        *   Applied helper to GET/POST/PUT/DELETE handlers.
+        *   Implemented Zod validation for POST (`CreatePostSchema`) and PUT (`UpdatePostSchema`).
+    *   **Reviewed Admin Frontend (`PostEditor.tsx`):** Applied standardized global styles (`.form-input`, `.form-label`, `.btn`). Noted potential improvements for tag input UI.
+    *   **Reviewed `lib/` Utilities & Hooks:** Found `utils.ts` and hooks generally well-structured. Noted minor potential improvements (error handling, SSR compatibility, testing).
+    *   **Added Tests (`Contact API`):** Created `__tests__/api/contact.test.ts` with Jest tests. Debugged and fixed Jest mock hoisting/initialization issues. (Skipped final test run verification).
+*   **4/8/2025, 6:31:33 PM UTC** - **Started Admin UX Polish (Strategy Plan - Core #4):**
+    *   **Added Markdown Preview:** Implemented toggleable Markdown preview in `PostEditor.tsx` using `ReactMarkdown` and `prose` styling.
+*   **4/8/2025, 7:42:39 PM UTC** - **Implemented Scroll-Aware UI (Refined Concept 2):**
+    *   **Created Hooks:** Implemented `useScrollDirection.ts` and `useScrollPosition.ts` (with throttling).
+    *   **Created Components:**
+        *   `ScrollAwareHeader.tsx`: Client Component using hooks to show header on scroll-up (desktop) or fixed menu icon (mobile) triggering overlay.
+        *   `ScrollAwareFooter.tsx`: Client Component using `useIntersectionObserver` to show footer when end-of-page sentinel is visible.
+        *   `ParallaxBackgroundWrapper.tsx`: Client Component using `useScrollPosition` to apply parallax effect.
+    *   **Refactored Layout (`app/layout.tsx`):**
+        *   Converted to Client Component to use `useRef`.
+        *   Removed static Header/Footer.
+        *   Integrated `ScrollAwareHeader`, `ScrollAwareFooter` (with sentinel ref), and `ParallaxBackgroundWrapper` around `VantaBackground`.
+        *   Fixed conflicting `VantaBackground` imports.
+        *   **Fixed Metadata/Client Component Conflict:** Resolved build error by reverting `app/layout.tsx` to a Server Component (keeping `metadata` export) and creating `app/components/ClientLayout.tsx` (marked `'use client'`) to handle client-side hooks (`useRef`) and components (`ScrollAwareHeader`, `ScrollAwareFooter`, `ParallaxBackgroundWrapper`, `SessionProviderWrapper`).
+    *   **4/8/2025, 7:50:15 PM UTC** - **Continued UI Pillars Implementation:**
+        *   **Disabled Mobile Parallax:** Updated `ParallaxBackgroundWrapper.tsx` to use `useMediaQuery` and disable the transform effect on mobile devices.
+        *   **Refined Typography:** Added specific dark mode (`prose-invert`) overrides to `tailwind.config.js` for better theme consistency. Confirmed `PageLayout` padding is adequate.
+        *   **Deferred Task:** Noted that a full Accessibility Audit (Pillar #7) remains as a future task.
+    *   **4/8/2025, 7:54:14 PM UTC** - **Continued UI Pillars Implementation (Typography):**
+        *   **Phased out SF Pro Font:** Removed SF Pro configuration from `app/fonts/index.ts`, `app/layout.tsx`, and `tailwind.config.js`.
+        *   **Reviewed Typography:** Confirmed `app/page.tsx` and `app/contact/page.tsx` align with the simplified font system (Inter/Orbitron) and spacing guidelines.
+    *   **Improved Tag Input:** Replaced comma-separated tag input with a pill-based UI in `PostEditor.tsx`, allowing adding tags via Enter key and removing tags via button click. Updated state management and save logic accordingly. Fixed JSX syntax error during implementation.
+    *   **Added Bulk Actions:**
+        *   Added selection state (`selectedPostIds`) and handlers (`handleToggleSelectPost`, `handleSelectAll`) to `app/admin/page.tsx`.
+        *   Added checkboxes to `PostList.tsx` for selecting individual posts and all posts.
+        *   Added bulk action buttons (Publish, Unpublish, Delete) and handlers (`handleBulkAction`, etc.) to `app/admin/page.tsx`.
+        *   Created bulk action API endpoint (`app/api/admin/posts/bulk/route.ts`) with Zod validation and Prisma `updateMany`/`deleteMany` logic.
+    *   **4/8/2025, 6:49:54 PM UTC** - **Refactored Blog UI/UX & Performance:**
+        *   **API (`/api/blog/[slug]`):** Added ISR revalidation (`revalidate = 3600`).
+        *   **Blog List (`/app/blog/page.tsx`):**
+            *   Converted to Server Component.
+            *   Moved data fetching server-side with pagination, tag filtering, and search based on `searchParams`.
+            *   Created client components `BlogSearchControls.tsx` and `PaginationControls.tsx` to handle user interactions and URL updates.
+            *   Added `loading.tsx` for Suspense boundary.
+            *   Integrated `PageLayout`.
+        *   **Single Post (`/app/blog/[slug]/page.tsx`):**
+            *   Recreated file after accidental deletion during previous refactoring.
+            *   Added top margin to `<article>` for better spacing.
+            *   Ensured usage of `PageLayout`.
+        *   **Fixed Build Error (`createContext`):** Diagnosed `TypeError` related to Framer Motion's context usage (`<motion.div>`) within `PageLayout` when rendered by Server Components (like the refactored blog page).
+        *   **Refactored Animation:** Extracted the `<motion.div>` into a new Client Component (`app/components/AnimatedPageWrapper.tsx`). Updated `PageLayout.tsx` to use this wrapper, resolving the server-rendering conflict.

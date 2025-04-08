@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend'; // Import Resend
+import { z } from 'zod'; // Import Zod
 
 // Initialize Resend client
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -9,48 +10,53 @@ if (!resend) {
   console.warn("RESEND_API_KEY not found in environment variables. Email sending will be disabled.");
 }
 
-// Basic validation (can be expanded)
-function validateInput(data: any) {
-  if (!data.name || typeof data.name !== 'string' || data.name.trim() === '') {
-    return 'Name is required.';
-  }
-  if (!data.email || typeof data.email !== 'string' || !/\S+@\S+\.\S+/.test(data.email)) {
-    return 'Valid email is required.';
-  }
-  if (!data.message || typeof data.message !== 'string' || data.message.trim() === '') {
-    return 'Message is required.';
-  }
-  return null; // No errors
-}
+// Define Zod schema for validation
+const ContactFormSchema = z.object({
+  name: z.string().trim().min(1, { message: "Name is required." }),
+  email: z.string().email({ message: "Valid email is required." }),
+  message: z.string().trim().min(1, { message: "Message is required." }),
+});
+
+// Define type based on schema
+type ContactFormData = z.infer<typeof ContactFormSchema>;
 
 export async function POST(request: Request) {
   try {
     const formData = await request.json();
 
-    // Validate input
-    const validationError = validateInput(formData);
-    if (validationError) {
-      return NextResponse.json({ error: validationError }, { status: 400 });
+    // Validate input using Zod
+    const validationResult = ContactFormSchema.safeParse(formData);
+    if (!validationResult.success) {
+      // Combine potential multiple errors into a single message string
+      const errorMessage = validationResult.error.errors.map(e => e.message).join(' ');
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
+
+    // Use validated and typed data from now on
+    const validatedData: ContactFormData = validationResult.data;
 
     // --- Save to database ---
     const submission = await prisma.contactSubmission.create({
       data: {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        message: formData.message.trim(),
+        // Use validated data (already trimmed by schema)
+        name: validatedData.name,
+        email: validatedData.email,
+        message: validatedData.message,
       },
     });
     console.log("Contact submission saved:", submission.id);
 
     // --- Send Emails ---
     if (resend) { // Only attempt if Resend client is initialized
-      const senderName = "Enyu Rao"; // Replace with your name or site name
-      const senderEmail = "enyu@launchyard.xyz"; // Verified sender email
-      const userName = formData.name.trim();
-      const userEmail = formData.email.trim();
-      const userMessage = formData.message.trim();
-      const notificationRecipient = "enyu@launchyard.xyz"; // Your notification email
+      // TODO: Move these to environment variables or constants
+      const senderName = process.env.CONTACT_SENDER_NAME || "Enyu Rao";
+      const senderEmail = process.env.CONTACT_SENDER_EMAIL || "enyu@launchyard.xyz"; // Should be verified with Resend
+      const notificationRecipient = process.env.CONTACT_NOTIFICATION_EMAIL || "enyu@launchyard.xyz";
+
+      // Use validated data
+      const userName = validatedData.name;
+      const userEmail = validatedData.email;
+      const userMessage = validatedData.message;
 
       // Send Confirmation Email to User
       try {

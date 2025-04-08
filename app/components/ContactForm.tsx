@@ -12,19 +12,10 @@ export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [feedbackMessage, setFeedbackMessage] = useState('');
 
-  // Define colors (could be passed as props or use context/theme later)
-  // Light theme colors
-  const primaryTextColor = "text-gray-900"; // Dark text for inputs/form
-  const labelTextColor = "text-gray-700";   // Slightly lighter for labels
-  const accentColor = "text-teal-500";      // Adjusted accent for light bg
-  const buttonBgColor = "bg-teal-600";
-  const buttonHoverBgColor = "hover:bg-teal-700";
-  const buttonTextColor = "text-white";     // Keep button text white
-  const inputBgColor = "bg-white";          // White input background
-  const inputBorderColor = "border-gray-300"; // Lighter border
-  const successColor = "text-green-600";    // Darker green for light bg
-  const errorColor = "text-red-600";        // Darker red for light bg
-
+  // Removed local color variables, styles are now in globals.css
+  // Keep success/error colors for feedback message
+  const successColor = "text-green-600";
+  const errorColor = "text-red-600";
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus('loading');
@@ -62,7 +53,7 @@ export default function ContactForm() {
     <div className="w-full max-w-md bg-white p-6 md:p-8 rounded-lg shadow-lg"> {/* Removed mx-auto */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Name</label>
+          <label htmlFor="name" className="form-label">Name</label> {/* Use form-label class */}
           <input
             type="text"
             name="name"
@@ -70,11 +61,11 @@ export default function ContactForm() {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className={`w-full px-3 py-2 ${inputBgColor} ${primaryTextColor} border ${inputBorderColor} rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
+            className="form-input" // Use form-input class
           />
         </div>
         <div>
-          <label htmlFor="email" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Email</label>
+          <label htmlFor="email" className="form-label">Email</label> {/* Use form-label class */}
           <input
             type="email"
             name="email"
@@ -82,11 +73,11 @@ export default function ContactForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`w-full px-3 py-2 ${inputBgColor} ${primaryTextColor} border ${inputBorderColor} rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
+            className="form-input" // Use form-input class
           />
         </div>
         <div>
-          <label htmlFor="message" className={`block text-sm font-medium ${labelTextColor} mb-1 text-left`}>Message</label>
+          <label htmlFor="message" className="form-label">Message</label> {/* Use form-label class */}
           <textarea
             name="message"
             id="message"
@@ -94,7 +85,7 @@ export default function ContactForm() {
             required
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className={`w-full px-3 py-2 ${inputBgColor} ${primaryTextColor} border ${inputBorderColor} rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500`}
+            className="form-input" // Use form-input class
           ></textarea>
         </div>
         <div>
@@ -102,16 +93,25 @@ export default function ContactForm() {
             data-cursor-magnetic // Add attribute
             type="submit"
             disabled={status === 'loading'}
-            className={`w-full py-2 px-4 ${buttonBgColor} ${buttonTextColor} font-semibold rounded-md ${buttonHoverBgColor} transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed`}
+            // Use btn and btn-primary classes, keep w-full and disabled states
+            className="btn btn-primary w-full"
           >
             {status === 'loading' ? 'Sending...' : 'Send Message'}
           </button>
         </div>
-        {feedbackMessage && (
-          <p className={`mt-4 text-sm text-center ${status === 'success' ? successColor : errorColor}`}>
-            {feedbackMessage}
+        {/* Container to prevent layout shift and apply transition */}
+        <div className="mt-4 h-5"> {/* Fixed height container */}
+          <p
+            className={`text-sm text-center transition-opacity duration-300 ease-in-out ${
+              status === 'success' ? successColor : errorColor
+            } ${feedbackMessage ? 'opacity-100' : 'opacity-0'}`}
+            // Use aria-live for accessibility on status messages
+            aria-live="polite"
+          >
+            {/* Render message or non-breaking space to maintain height */}
+            {feedbackMessage || '\u00A0'}
           </p>
-        )}
+        </div>
       </form>
     </div>
   );

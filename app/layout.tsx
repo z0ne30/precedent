@@ -1,39 +1,32 @@
-// Reverted to Server Component
+// Server Component Root Layout
 import "./globals.css";
 import cx from "classnames";
-import { sfPro, inter, orbitron } from "./fonts"; // Import orbitron
+import { inter, orbitron } from "./fonts";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
-import SessionProviderWrapper from "./components/providers/SessionProviderWrapper"; // Import NextAuth provider wrapper
-import CustomCursor from "./components/CustomCursor"; // Import the custom cursor
-import VantaBackground from './components/VantaBackground'; // Import the new VantaBackground
-
+// Import the new ClientLayout wrapper which handles client-side hooks and components
+import ClientLayout from './components/ClientLayout';
 export const metadata = {
   title: "my digital garden",
   description: "this is a continuous vibe test on capabilities of code gen AI",
   metadataBase: new URL("https://vibetest.vercel.app/"),
 };
 
-// Restore async if needed, but likely not required for this minimal layout
+// Metadata export remains here in the Server Component
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Removed useRef and client-side structure
   return (
-    <SessionProviderWrapper>
-      <html lang="en">
-        {/* Revert body background to white */}
-        <body className={cx(sfPro.variable, inter.variable, orbitron.variable, "relative bg-white")}>
-          <div className="absolute inset-0 -z-10">
-             <VantaBackground />
-          </div>
-          <CustomCursor /> 
-          <div className="relative z-10 bg-transparent"> 
-             {children}
-          </div>
-           <VercelAnalytics />
-        </body>
-      </html>
-    </SessionProviderWrapper>
+    // SessionProviderWrapper moved inside ClientLayout
+    <html lang="en" className="h-full">
+      <body className={cx(inter.variable, orbitron.variable, "relative bg-white dark:bg-gray-900 h-full")}>
+        {/* Render the ClientLayout which contains all client-side hooks and structure */}
+        <ClientLayout>{children}</ClientLayout>
+        <VercelAnalytics />
+      </body>
+    </html>
   );
 }
