@@ -8,7 +8,7 @@ import Image from 'next/image';
 const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ssr: false });
 
 export default function Home() {
-  const subtitles = ["drawn to the difficult things", "half a dev", "perpetual learner"];
+  const subtitles = ["drawn to the difficult things", "half a dev", "creative"];
   const primaryTextColor = "text-gray-900";
   const accentColor = "text-teal-400";
 
