@@ -26,6 +26,9 @@ export default function ClientLayout({
           <VantaBackground />
         </ParallaxBackgroundWrapper>
 
+        {/* Scrim Layer for Content Readability */}
+        <div className="absolute inset-0 z-0 bg-white/10 dark:bg-black/20 backdrop-blur-sm pointer-events-none" />
+
         {/* Custom Cursor */}
         <CustomCursor />
 

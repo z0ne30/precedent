@@ -80,29 +80,7 @@ export default function Home() {
         variants={itemVariants} // Apply animation variants
       >
         <Link data-cursor-magnetic href="/contact" className="nav-link-hover-scale">Contact</Link> {/* Apply new hover class */}
-      </motion.div>
-
-      {/* Spotify Link (Footer) - Absolutely Positioned */}
-      <div className="absolute bottom-0 left-0 right-0 pb-8 w-full flex justify-center"> {/* Absolute positioning */}
-        <a
-          data-cursor-magnetic
-          href="https://open.spotify.com/user/nathan.rao2000?" // Using the originally provided URL
-          target="_blank"
-          rel="noopener noreferrer"
-          className="opacity-75 hover:opacity-100 transition-opacity duration-200" // Added hover effect
-          aria-label="Spotify Profile" // Accessibility
-        >
-          {/* Using Next.js Image component for optimization, pointing to external SVG */}
-          {/* Note: External image URLs need to be configured in next.config.js */}
-          <Image
-            src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" // Example external SVG URL
-            alt="Spotify Logo"
-            width={28} // Set width (corresponds to h-7)
-            height={28} // Set height (corresponds to w-7)
-            className="filter hover:brightness-110" // Optional: slight brightness change on hover
-          />
-        </a>
-      </div>
+      </motion.div>     
     </div> // Closing tag for main container div
   );
 }

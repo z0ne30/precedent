@@ -144,7 +144,7 @@ export default function CustomCursor({}: CustomCursorProps) {
     <>
       {/* Main Cursor Element (Example: Ring) */}
       <motion.div
-        className="fixed pointer-events-none z-50 rounded-full border-2 border-teal-400"
+        className="fixed pointer-events-none z-[9999] rounded-full border-2 border-teal-400" // Increased z-index
         style={{
           translateX: cursorXSpring,
           translateY: cursorYSpring,
@@ -161,7 +161,7 @@ export default function CustomCursor({}: CustomCursorProps) {
       {/* Magnetic Dot Element */}
       <motion.div
         ref={magneticDotRef}
-        className="fixed pointer-events-none z-50 rounded-full bg-teal-500" // Simple dot style
+        className="fixed pointer-events-none z-[9999] rounded-full bg-teal-500" // Increased z-index
         style={{
           translateX: magneticDotXSpring,
           translateY: magneticDotYSpring,

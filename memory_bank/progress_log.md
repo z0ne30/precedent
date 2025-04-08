@@ -201,17 +201,18 @@
     *   **Added Tests (`Contact API`):** Created `__tests__/api/contact.test.ts` with Jest tests. Debugged and fixed Jest mock hoisting/initialization issues. (Skipped final test run verification).
 *   **4/8/2025, 6:31:33 PM UTC** - **Started Admin UX Polish (Strategy Plan - Core #4):**
     *   **Added Markdown Preview:** Implemented toggleable Markdown preview in `PostEditor.tsx` using `ReactMarkdown` and `prose` styling.
-*   **4/8/2025, 7:42:39 PM UTC** - **Implemented Scroll-Aware UI (Refined Concept 2):**
-    *   **Created Hooks:** Implemented `useScrollDirection.ts` and `useScrollPosition.ts` (with throttling).
+*   **4/8/2025, 9:03:26 PM UTC** - **Implemented Fixed Trigger Navigation UI:**
+    *   **Created Hooks:** Implemented `useScrollPosition.ts` (for parallax). `useScrollDirection.ts` created but ultimately unused for header.
     *   **Created Components:**
-        *   `ScrollAwareHeader.tsx`: Client Component using hooks to show header on scroll-up (desktop) or fixed menu icon (mobile) triggering overlay.
+        *   `ScrollAwareHeader.tsx`: Refactored to use a fixed top-right menu icon trigger (for both desktop and mobile) that opens a full-screen overlay menu. Removed scroll-aware logic.
         *   `ScrollAwareFooter.tsx`: Client Component using `useIntersectionObserver` to show footer when end-of-page sentinel is visible.
         *   `ParallaxBackgroundWrapper.tsx`: Client Component using `useScrollPosition` to apply parallax effect.
-    *   **Refactored Layout (`app/layout.tsx`):**
+    *   **Refactored Layout (`app/layout.tsx` & `ClientLayout.tsx`):**
         *   Converted to Client Component to use `useRef`.
         *   Removed static Header/Footer.
         *   Integrated `ScrollAwareHeader`, `ScrollAwareFooter` (with sentinel ref), and `ParallaxBackgroundWrapper` around `VantaBackground`.
         *   Fixed conflicting `VantaBackground` imports.
+        *   **Fixed Custom Cursor Visibility:** Increased `z-index` on cursor elements in `CustomCursor.tsx` to ensure visibility above the mobile navigation overlay.
         *   **Fixed Metadata/Client Component Conflict:** Resolved build error by reverting `app/layout.tsx` to a Server Component (keeping `metadata` export) and creating `app/components/ClientLayout.tsx` (marked `'use client'`) to handle client-side hooks (`useRef`) and components (`ScrollAwareHeader`, `ScrollAwareFooter`, `ParallaxBackgroundWrapper`, `SessionProviderWrapper`).
     *   **4/8/2025, 7:50:15 PM UTC** - **Continued UI Pillars Implementation:**
         *   **Disabled Mobile Parallax:** Updated `ParallaxBackgroundWrapper.tsx` to use `useMediaQuery` and disable the transform effect on mobile devices.

@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useScrollDirection } from '@/lib/hooks/useScrollDirection';
-import useMediaQuery from '@/lib/hooks/use-media-query'; // Assuming this hook exists and works
+// import { useScrollDirection } from '@/lib/hooks/useScrollDirection'; // No longer needed
+// import useMediaQuery from '@/lib/hooks/use-media-query'; // No longer needed for header logic
 
 // Simple Hamburger Icon component
 const MenuIcon = ({ onClick }: { onClick: () => void }) => (
@@ -34,20 +34,16 @@ const CloseIcon = ({ onClick }: { onClick: () => void }) => (
 
 
 export default function ScrollAwareHeader() {
-  const { scrollDirection, scrolledPastThreshold } = useScrollDirection(100); // Threshold of 100px
-  const { isMobile } = useMediaQuery(); // Use the media query hook
+  // Remove scroll direction and media query hooks
+  // const { scrollDirection, scrolledPastThreshold } = useScrollDirection(100);
+  // const { isMobile } = useMediaQuery();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Determine header visibility for desktop scroll-aware version
-  const showDesktopHeader = scrollDirection === 'up' && scrolledPastThreshold;
+  // Header visibility logic removed
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Animation variants for desktop header
-  const headerVariants = {
-    hidden: { y: '-100%', opacity: 0 },
-    visible: { y: '0%', opacity: 1 },
-  };
+  // Remove desktop header variants
 
   // Animation variants for mobile overlay
   const overlayVariants = {
@@ -59,47 +55,20 @@ export default function ScrollAwareHeader() {
 
   return (
     <>
-      {isMobile ? (
-        // --- Mobile: Fixed Menu Icon ---
-        <div className="fixed top-4 right-4 z-40 text-gray-800 dark:text-gray-200">
-          <MenuIcon onClick={toggleMenu} />
-        </div>
-      ) : (
-        // --- Desktop: Scroll-Aware Header ---
-        <AnimatePresence>
-          {showDesktopHeader && (
-            <motion.header
-              key="desktop-header"
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={headerVariants}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="fixed top-0 left-0 right-0 z-30 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm"
-            >
-              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                  {/* Site branding (optional here, could be just nav) */}
-                   <Link href="/" className="font-orbitron text-xl font-bold text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">
-                     Enyu Rao
-                   </Link>
-                  {/* Desktop navigation */}
-                  <nav className="flex space-x-6">
-                    <Link href="/" className={navLinkClasses}>Home</Link>
-                    <Link href="/blog" className={navLinkClasses}>Blog</Link>
-                    {/* <Link href="/projects" className={navLinkClasses}>Projects</Link> */}
-                    <Link href="/contact" className={navLinkClasses}>Contact</Link>
-                  </nav>
-                </div>
-              </div>
-            </motion.header>
-          )}
-        </AnimatePresence>
+      {/* --- Always render fixed Menu Icon (Top Right) --- */}
+      {/* Only render if menu is NOT open to prevent overlap with close button */}
+      {!isMenuOpen && (
+         <div className="fixed top-4 right-4 z-40 text-gray-800 dark:text-gray-200">
+           <MenuIcon onClick={toggleMenu} />
+         </div>
       )}
+      {/* Removed desktop scroll-aware header logic */}
 
       {/* --- Mobile: Full-Screen Overlay Menu --- */}
       <AnimatePresence>
-        {isMobile && isMenuOpen && (
+        {/* --- Full-Screen Overlay Menu (Mobile & Desktop) --- */}
+        {/* Condition is now only based on isMenuOpen */}
+        {isMenuOpen && (
           <motion.div
             key="mobile-menu"
             initial="hidden"
