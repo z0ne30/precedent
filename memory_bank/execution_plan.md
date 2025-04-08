@@ -28,3 +28,29 @@ This plan outlines the steps to integrate Prisma ORM into the Next.js project us
 **Phase D: Future UI Enhancements (TODO)**
 
 11. **Integrate User Photo:** Implement subtle background integration for user photo (Option B from discussion). Requires photo file and styling details.
+
+**Phase E: UI Updates & Fixes (Completed - April 8, 2025)**
+
+12. **Update Logo References:**
+    *   Searched for `/logo.png` usage.
+    *   Replaced `/logo.png` with `/llogo.png` in `app/opengraph-image.tsx`.
+13. **Fix TypeScript Errors:**
+    *   Installed `@types/node` to resolve `process` error.
+    *   Updated `tsconfig.json` (`target: "esnext"`, `moduleResolution: "bundler"`) to resolve module and JSX errors in `app/opengraph-image.tsx`.
+14. **Update Favicon:**
+    *   Removed `app/favicon.ico`.
+    *   Copied `public/llogo.png` to `app/icon.png` (Next.js convention).
+
+**Phase F: Blog Post Readability Enhancement (Planned)**
+
+15. **Goal:** Improve readability of the individual blog post page (`app/(default)/blog/[slug]/page.tsx`).
+16. **Step 1: Optimize Line Length:**
+    *   **File:** `app/(default)/blog/[slug]/page.tsx`
+    *   **Change:** Modify content container class from `max-w-3xl` to `max-w-2xl`.
+17. **Step 2: Refine Typography Styles:**
+    *   **File:** `tailwind.config.js`
+    *   **Change:** Add customizations under `theme.extend.typography` for the default `prose` class.
+    *   **Focus Areas:** Link styling (color, hover), paragraph spacing (margins, line-height), heading margins.
+18. **Step 3: Add Syntax Highlighting (Decision Pending):**
+    *   **Action:** Integrate a library (e.g., `rehype-highlight`) with `ReactMarkdown` if code blocks are frequently used.
+    *   **Requires:** User confirmation, package installation, component update.
