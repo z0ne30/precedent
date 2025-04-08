@@ -71,14 +71,6 @@ export default function Home() {
         </motion.nav>
 
       </motion.div> {/* Closing tag for main content motion.div */}
-
-      {/* Contact Link for Mobile (Positioned relative to main content) */}
-      <motion.div
-        className="md:hidden mt-16 text-center w-full" // Show only on mobile, add margin, center text, full width for centering
-        variants={itemVariants} // Apply animation variants
-      >
-        <Link data-cursor-magnetic href="/contact" className="nav-link-hover-scale">Contact</Link> {/* Apply new hover class */}
-      </motion.div>     
     </div> // Closing tag for main container div
   );
 }
