@@ -4,7 +4,8 @@ import { useRef } from 'react';
 import SessionProviderWrapper from "./providers/SessionProviderWrapper";
 import CustomCursor from "./CustomCursor";
 import VantaBackground from './VantaBackground';
-import ScrollAwareHeader from './ScrollAwareHeader';
+// import ScrollAwareHeader from './ScrollAwareHeader'; // Removed
+import Header from './Header'; // Import the updated Header
 import ScrollAwareFooter from './ScrollAwareFooter';
 import ParallaxBackgroundWrapper from './ParallaxBackgroundWrapper';
 
@@ -31,8 +32,8 @@ export default function ClientLayout({
         {/* Custom Cursor */}
         <CustomCursor />
 
-        {/* Scroll Aware Header (conditionally renders based on scroll/breakpoint) */}
-        <ScrollAwareHeader />
+        {/* Render the updated Header */}
+        <Header />
 
         {/* Main Content Area */}
         {/* Needs relative and z-index to appear above background */}

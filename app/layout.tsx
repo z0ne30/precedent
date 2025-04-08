@@ -22,7 +22,8 @@ export default function RootLayout({
   return (
     // SessionProviderWrapper moved inside ClientLayout
     <html lang="en" className="h-full">
-      <body className={cx(inter.variable, orbitron.variable, "relative bg-white dark:bg-gray-900 h-full")}>
+      {/* Added default text colors for light/dark modes */}
+      <body className={cx(inter.variable, orbitron.variable, "relative bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 h-full")}>
         {/* Render the ClientLayout which contains all client-side hooks and structure */}
         <ClientLayout>{children}</ClientLayout>
         <VercelAnalytics />
