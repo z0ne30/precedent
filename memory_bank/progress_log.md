@@ -227,6 +227,7 @@
         *   Added checkboxes to `PostList.tsx` for selecting individual posts and all posts.
         *   Added bulk action buttons (Publish, Unpublish, Delete) and handlers (`handleBulkAction`, etc.) to `app/admin/page.tsx`.
         *   Created bulk action API endpoint (`app/api/admin/posts/bulk/route.ts`) with Zod validation and Prisma `updateMany`/`deleteMany` logic.
+        *   **Improved Text Readability:** Darkened specific gray text colors (meta text, placeholders, homepage subtitle) across the site to enhance contrast against the Vanta background.
     *   **4/8/2025, 6:49:54 PM UTC** - **Refactored Blog UI/UX & Performance:**
         *   **API (`/api/blog/[slug]`):** Added ISR revalidation (`revalidate = 3600`).
         *   **Blog List (`/app/blog/page.tsx`):**
@@ -241,3 +242,4 @@
             *   Ensured usage of `PageLayout`.
         *   **Fixed Build Error (`createContext`):** Diagnosed `TypeError` related to Framer Motion's context usage (`<motion.div>`) within `PageLayout` when rendered by Server Components (like the refactored blog page).
         *   **Refactored Animation:** Extracted the `<motion.div>` into a new Client Component (`app/components/AnimatedPageWrapper.tsx`). Updated `PageLayout.tsx` to use this wrapper, resolving the server-rendering conflict.
+    *   **Improved Vanta Density (Responsive):** Refactored `VantaBackground.tsx` to use `useBreakpointValue` hook and dynamically adjust `points`, `maxDistance`, and `spacing` based on Tailwind breakpoints (sm, md, lg, xl), tuning values for better readability across screen sizes (slightly denser mobile, scaling up to desktop).

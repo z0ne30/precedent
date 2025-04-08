@@ -42,8 +42,16 @@ const ScrollAwareFooter: React.FC<ScrollAwareFooterProps> = ({ sentinelRef }) =>
                 &copy; {currentYear} Enyu Rao.
               </div>
 
-              {/* Social Links */}
-              <div className="flex space-x-3 mt-2 sm:mt-0">
+              {/* Social Links & Contact */}
+              <div className="flex space-x-3 mt-2 sm:mt-0 items-center"> {/* Added items-center */}
+                {/* Moved Contact Link Here & Updated Style */}
+                <Link
+                  data-cursor-magnetic
+                  href="/contact"
+                  className="hover:text-teal-600 dark:hover:text-teal-400 transition-colors" // Matched style
+                >
+                  Contact
+                </Link>
                 <a
                   href="https://www.linkedin.com/in/enyu-rao/"
                   target="_blank"
@@ -76,8 +84,8 @@ const ScrollAwareFooter: React.FC<ScrollAwareFooterProps> = ({ sentinelRef }) =>
                     height={16}
                     className="filter hover:brightness-110 mr-1"
                   />
-                   Spotify
                 </a>
+                {/* Contact Link moved above */}
               </div>
             </div>
           </div>

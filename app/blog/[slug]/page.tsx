@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   // Define colors consistent with light theme (can be removed if relying solely on prose/global styles)
-  const metaTextColor = "text-gray-500"; // Standard meta text color
+  const metaTextColor = "text-gray-700"; // Darkened gray
 
   return (
     // Use PageLayout for consistent padding and max-width

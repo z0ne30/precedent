@@ -4,7 +4,7 @@
 export default function BlogLoading() {
   return (
     <div className="py-10 text-center">
-      <p className="text-gray-500 dark:text-gray-400">Loading posts...</p>
+      <p className="text-gray-700 dark:text-gray-300">Loading posts...</p> {/* Darkened gray */}
       {/* Optional: Add skeleton loaders for PostCards */}
       {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {[...Array(6)].map((_, i) => (

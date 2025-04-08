@@ -65,11 +65,9 @@ export default function Home() {
         >
           {/* Standard Links - Apply new hover class */}
           <a data-cursor-magnetic href="https://launchyard.xyz" target="_blank" rel="noopener noreferrer" className="nav-link-hover-scale">Launch Yard</a>
-          <a data-cursor-magnetic href="https://www.linkedin.com/in/enyu-rao/" target="_blank" rel="noopener noreferrer" className="nav-link-hover-scale">LinkedIn</a>
           <a data-cursor-magnetic href="https://twitter.com/0xhappier" target="_blank" rel="noopener noreferrer" className="nav-link-hover-scale">Twitter</a>
           <Link data-cursor-magnetic href="/blog" className="nav-link-hover-scale">Blog</Link>
           {/* Responsive Contact Link - Apply new hover class */}
-          <Link data-cursor-magnetic href="/contact" className="nav-link-hover-scale hidden md:inline-block">Contact</Link>
         </motion.nav>
 
       </motion.div> {/* Closing tag for main content motion.div */}

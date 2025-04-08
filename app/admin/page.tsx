@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
         {/* Bulk Action Controls - Show only when items are selected */}
         {selectedPostIds.size > 0 && (
           <div className="flex items-center space-x-2 mb-2 p-2 border-y border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-             <span className="text-sm text-gray-600 dark:text-gray-400">{selectedPostIds.size} selected</span>
+             <span className="text-sm text-gray-700 dark:text-gray-300">{selectedPostIds.size} selected</span> {/* Darkened gray */}
              {/* TODO: Implement handleBulkPublish */}
              <button
                onClick={handleBulkPublish}
@@ -235,7 +235,7 @@ export default function AdminDashboardPage() {
              </button>
           </div>
         )}
-        {isPostsLoading && <p className="text-gray-500 dark:text-gray-400">Loading posts...</p>}
+        {isPostsLoading && <p className="text-gray-700 dark:text-gray-300">Loading posts...</p>} {/* Darkened gray */}
         {error && <p className="text-red-500">Error: {error}</p>}
         {!isPostsLoading && !error && (
           <PostList
@@ -249,7 +249,7 @@ export default function AdminDashboardPage() {
         )}
         {/* Spacer to push user info down if needed, or integrate differently */}
         <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
-           <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+           <p className="text-sm text-gray-700 dark:text-gray-300 truncate"> {/* Darkened gray */}
              Signed in as: {effectiveSession?.user?.email} {skipAuth ? '(DEV MODE - AUTH SKIPPED)' : ''}
            </p>
         </div>

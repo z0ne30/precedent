@@ -79,7 +79,7 @@ async function getBlogData(searchParams: { [key: string]: string | string[] | un
 // Loading component (can be moved to loading.tsx)
 function LoadingSkeleton() {
   // Basic loading text, replace with actual skeleton UI later
-  return <p className="text-center text-gray-500 dark:text-gray-400 py-10">Loading posts...</p>;
+  return <p className="text-center text-gray-700 dark:text-gray-300 py-10">Loading posts...</p>; {/* Darkened gray */}
 }
 
 // Component to render the list and pagination
@@ -87,7 +87,7 @@ async function PostListRenderer({ searchParams }: { searchParams: { [key: string
    const { posts, currentPage, totalPages } = await getBlogData(searchParams); // Fetch only posts/pagination here
 
    if (posts.length === 0) {
-     return <p className="text-center text-gray-500 dark:text-gray-400 py-10">No posts found matching your criteria.</p>;
+     return <p className="text-center text-gray-700 dark:text-gray-300 py-10">No posts found matching your criteria.</p>; {/* Darkened gray */}
    }
 
    return (

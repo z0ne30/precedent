@@ -6,7 +6,7 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 // Import the new ClientLayout wrapper which handles client-side hooks and components
 import ClientLayout from './components/ClientLayout';
 export const metadata = {
-  title: "my digital garden",
+  title: "enyu's digital garden",
   description: "this is a continuous vibe test on capabilities of code gen AI",
   metadataBase: new URL("https://vibetest.vercel.app/"),
 };

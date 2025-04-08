@@ -8,6 +8,13 @@ module.exports = {
   },
   theme: {
     extend: {
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+      },
       fontFamily: {
         // display: ["var(--font-sf)", "system-ui", "sans-serif"], // Removed SF Pro display font
         default: ["var(--font-inter)", "system-ui", "sans-serif"], // Keep Inter for default

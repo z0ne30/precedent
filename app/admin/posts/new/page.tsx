@@ -116,7 +116,7 @@ export default function NewPostPage() {
               className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-900 font-mono text-sm`}
             />
              {/* Apply Meta Text Style (Light Theme) */}
-             <p className="text-xs text-gray-500 mt-1">Auto-generated from title, or enter manually (lowercase, numbers, hyphens).</p>
+             <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">Auto-generated from title, or enter manually (lowercase, numbers, hyphens).</p> {/* Darkened gray */}
           </div>
 
           {/* Content (Textarea) */}
