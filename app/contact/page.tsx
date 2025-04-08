@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react'; // Import useState
 import { getCalApi } from "@calcom/embed-react"; // Import getCalApi
 import ContactForm from '../components/ContactForm';
 import PageLayout from '../components/PageLayout'; // Import PageLayout
+import Modal from '../components/Modal'; // Import the new Modal component
 
 export default function ContactPage() {
-  // State to track modal status (optional, but good practice)
-  const [isCalModalOpen, setIsCalModalOpen] = useState(false);
+  // State to track modal status
+  const [isCalModalOpen, setIsCalModalOpen] = useState(false); // Keep for Cal.com if needed
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false); // State for Contact Form modal
 
   // Define colors consistent with theme
   // Colors defined here might be less necessary if styles are centralized later
@@ -92,12 +94,20 @@ export default function ContactPage() {
   }, []); // Empty dependency array ensures this runs once on mount
 
   return (
-    // Use PageLayout, passing the title
+    <> {/* Add React Fragment wrapper */}
+      {/* Use PageLayout, passing the title */}
     <PageLayout title="Get In Touch">
       {/* Removed outer divs and h1, PageLayout handles container and title */}
-        {/* Centered Contact Form Container */}
-        <div className="w-full max-w-md mx-auto mb-8">
-           <ContactForm /> {/* ContactForm component */}
+        {/* Button to open Contact Form Modal */}
+        <div className="text-center mb-8"> {/* Add margin bottom */}
+          <button
+            data-cursor-magnetic // Add magnetic effect
+            onClick={() => setIsContactModalOpen(true)}
+            // Apply standardized button classes, maybe secondary style?
+            className="btn btn-primary inline-block" // Changed to primary style
+          >
+            Send me a message
+          </button>
         </div>
 
         {/* Centered Cal.com Booking Button Container */}
@@ -109,12 +119,23 @@ export default function ContactPage() {
             // Apply standardized button classes, keep inline-block for centering
             className="btn btn-primary inline-block"
           >
-            Book a Meeting
+            Let's chat :)
           </button>
         </div>
 
         {/* Removed "Back to Home" link as Header provides navigation */}
       {/* Removed closing divs for outer containers */}
     </PageLayout>
-  );
+
+    {/* Contact Form Modal */}
+    <Modal
+      isOpen={isContactModalOpen}
+      onClose={() => setIsContactModalOpen(false)}
+      title="Send a Message"
+    >
+
+      <ContactForm />
+    </Modal>
+   </> 
+ );
 }

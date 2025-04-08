@@ -12,12 +12,12 @@ interface PageLayoutProps {
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children, title, className }) => {
   return (
-    <div className={cx("min-h-screen py-16 px-4 sm:px-6 lg:px-8", className)}>
+    <div className={cx("relative flex min-h-screen flex-col items-center justify-center px-4 sm:px-6 lg:px-8", className)}>
       {/* Use the client component wrapper for animation */}
       <AnimatedPageWrapper className="max-w-5xl mx-auto">
         {/* Render title if provided */}
         {title && (
-          <h1 className="font-orbitron text-4xl md:text-5xl text-teal-400 text-center mb-10 md:mb-12">
+          <h1 className="font-orbitron text-5xl md:text-9xl font-bold text-teal-400 mb-16 text-center">
             {title}
           </h1>
         )}
