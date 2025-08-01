@@ -17,9 +17,10 @@ module.exports = {
         '2xl': '1536px',
       },
       fontFamily: {
-        // display: ["var(--font-sf)", "system-ui", "sans-serif"], // Removed SF Pro display font
-        default: ["var(--font-inter)", "system-ui", "sans-serif"], // Keep Inter for default
-        orbitron: ["var(--font-orbitron)", "system-ui", "sans-serif"], // Add Orbitron
+        sans: ["var(--font-eb-garamond)", "serif"], // Set EB Garamond as default sans font
+        serif: ["var(--font-eb-garamond)", "serif"], // Also set as serif
+        default: ["var(--font-eb-garamond)", "serif"], // Keep for compatibility
+        orbitron: ["var(--font-eb-garamond)", "serif"], // Use EB Garamond for headings too
       },
       animation: {
         // Fade up and down

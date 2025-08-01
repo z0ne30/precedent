@@ -1,14 +1,21 @@
-// Removed localFont import and sfPro definition
-import { Inter, Orbitron } from 'next/font/google'; // Import Orbitron
+import { EB_Garamond } from 'next/font/google';
 
-export const inter = Inter({
-  variable: '--font-inter',
+export const ebGaramond = EB_Garamond({
+  variable: '--font-eb-garamond',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'], // Include various weights
 });
 
-// Configure Orbitron
-export const orbitron = Orbitron({
+// Keep a secondary font for potential accent use
+export const inter = EB_Garamond({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+});
+
+// Use EB Garamond for headings as well
+export const orbitron = EB_Garamond({
   variable: '--font-orbitron',
   subsets: ['latin'],
-  weight: ['400', '700'], // Include weights needed (e.g., 700 for bold heading)
+  weight: ['400', '500', '600', '700'],
 });

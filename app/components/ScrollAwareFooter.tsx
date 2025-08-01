@@ -2,7 +2,7 @@
 
 import React, { RefObject } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import useIntersectionObserver from '@/lib/hooks/use-intersection-observer'; // Assuming this hook exists
+import useIntersectionObserver from '@/lib/use-intersection-observer'; // Updated path
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -42,16 +42,8 @@ const ScrollAwareFooter: React.FC<ScrollAwareFooterProps> = ({ sentinelRef }) =>
                 &copy; {currentYear} Enyu Rao.
               </div>
 
-              {/* Social Links & Contact */}
-              <div className="flex space-x-3 mt-2 sm:mt-0 items-center"> {/* Added items-center */}
-                {/* Moved Contact Link Here & Updated Style */}
-                <Link
-                  data-cursor-magnetic
-                  href="/contact"
-                  className="hover:text-teal-600 dark:hover:text-teal-400 transition-colors" // Matched style
-                >
-                  Contact
-                </Link>
+              {/* Social Links */}
+              <div className="flex space-x-3 mt-2 sm:mt-0 items-center">
                 <a
                   href="https://www.linkedin.com/in/enyu-rao/"
                   target="_blank"
@@ -80,12 +72,11 @@ const ScrollAwareFooter: React.FC<ScrollAwareFooterProps> = ({ sentinelRef }) =>
                   <Image
                     src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg"
                     alt="Spotify Logo"
-                    width={16} // Smaller for footer
+                    width={16}
                     height={16}
                     className="filter hover:brightness-110 mr-1"
                   />
                 </a>
-                {/* Contact Link moved above */}
               </div>
             </div>
           </div>

@@ -27,18 +27,18 @@ const ScramblingText: React.FC<ScramblingTextProps> = ({
   // Use the useScramble hook with configuration based on docs
   const { ref, replay } = useScramble({
     text: texts[currentIndex],
-    // --- Configuration Options (Adjust as desired) ---
-    speed: 0.5,       // Animation speed (0-1, lower is faster)
+    // --- Configuration Options (Prevent animation overflow) ---
+    speed: 0.3,       // Animation speed (0-1, lower is faster)
     tick: 1,          // Frames per character step
-    step: 1,          // Characters added per tick
-    scramble: 12,     // How many times each char scrambles
+    step: 1,          // Characters added per tick - keep at 1 to prevent overflow
+    scramble: 3,      // Minimal scrambles to prevent temporary length increase
     seed: 2,          // Seed for random scrambling pattern
-    chance: 0.8,      // Chance a character will scramble per frame (0-1)
-    range: [65, 122], // Character code range (A-Z, a-z) - adjust if needed
+    chance: 0.9,      // Chance a character will scramble per frame (0-1) - increased
+    range: [97, 122], // Character code range (a-z lowercase only)
     overdrive: false, // Don't replace with underscores first
     overflow: false,  // Prevent text overflow during animation
     playOnMount: true, // Start animation immediately
-    ignore: [' '],    // Keep spaces static during scramble
+    ignore: [' ', '|'], // Keep spaces and pipes static during scramble
     // onAnimationStart: () => console.log('Scramble Start'),
     // onAnimationEnd: () => console.log('Scramble End'),
   });

@@ -2,12 +2,10 @@
 
 import { useRef } from 'react';
 import SessionProviderWrapper from "./providers/SessionProviderWrapper";
-import CustomCursor from "./CustomCursor";
 import VantaBackground from './VantaBackground';
 // import ScrollAwareHeader from './ScrollAwareHeader'; // Removed
 import Header from './Header'; // Import the updated Header
 import ScrollAwareFooter from './ScrollAwareFooter';
-import ParallaxBackgroundWrapper from './ParallaxBackgroundWrapper';
 
 export default function ClientLayout({
   children,
@@ -22,15 +20,10 @@ export default function ClientLayout({
       {/* Main container with flex column layout and min screen height */}
       {/* This div might not be strictly necessary if body handles flex, but provides clear structure */}
       <div className="flex flex-col min-h-screen">
-        {/* Parallax Background Wrapper */}
-        <ParallaxBackgroundWrapper factor={-0.1}>
-          <VantaBackground />
-        </ParallaxBackgroundWrapper>
+        {/* Vanta Background */}
+        <VantaBackground />
 
         {/* Removed Scrim Layer */}
-
-        {/* Custom Cursor */}
-        <CustomCursor />
 
         {/* Render the updated Header */}
         <Header />

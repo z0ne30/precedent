@@ -7,10 +7,6 @@ body {
   background-color: transparent !important; /* Force transparent */
 }
 
-/* Ensure default cursor is visible when Cal modal is open and custom cursor is hidden */
-body.cal-modal-open {
-  cursor: auto !important;
-}
 
 /* Base Button Styles */
 .btn {
@@ -56,29 +52,4 @@ body.cal-modal-open {
 /* Combined with scale effect */
 .nav-link-hover-scale {
   @apply nav-link-hover transition-transform duration-200 hover:scale-110;
-}
-/* Custom Cursor Background Reveal */
-.cursor-reveal-layer {
-  /* Ensure it covers the same area */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  /* Make this layer slightly brighter/more opaque */
-  opacity: 0.6 !important; /* Example: Higher opacity, use !important if needed to override inline style */
-  z-index: 0; /* Ensure it's above the base SVG but below content */
-
-  /* Define the mask */
-  mask-image: radial-gradient(
-    circle 100px at var(--cursor-x) var(--cursor-y), /* Adjust circle size (100px) as needed */
-    black 50%, /* Area inside the circle is visible */
-    transparent 100% /* Area outside fades to transparent */
-  );
-  /* Prefixes for broader browser support */
-  -webkit-mask-image: radial-gradient(
-    circle 100px at var(--cursor-x) var(--cursor-y),
-    black 50%,
-    transparent 100%
-  );
 }

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three'; // Required by Vanta
-import { useBreakpointValue } from '@/lib/hooks/useBreakpointValue'; // Import the new hook
 
 // Dynamically import Vanta effect to avoid SSR issues
 const importVantaEffect = () => import('vanta/dist/vanta.net.min');
@@ -15,13 +14,25 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({ className = '' }) => 
   const [vantaEffect, setVantaEffect] = useState<any>(null);
   const vantaRef = useRef<HTMLDivElement>(null);
 
-  // Define breakpoint-specific values for Vanta parameters
-  // Adjusted for slightly denser mobile and smoother scaling
-  // Defaults (xl and up) match the original hardcoded values
-  const points = useBreakpointValue({ sm: 6.00, md: 7.50, lg: 9.00, xl: 10.00 }) ?? 10.00;
-  const maxDistance = useBreakpointValue({ sm: 14.00, md: 16.00, lg: 18.00, xl: 20.00 }) ?? 20.00;
-  const spacing = useBreakpointValue({ sm: 22.00, md: 19.00, lg: 17.00, xl: 15.00 }) ?? 15.00;
-  const scaleMobile = 1.00; // Keep scaleMobile at 1, density adjustments preferred
+  // Responsive values for Vanta parameters
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Responsive parameters: desktop more sparse, mobile slightly denser
+  const points = isMobile ? 10.00 : 6.00; // More points on mobile for visibility
+  const maxDistance = isMobile ? 25.00 : 35.00; // Shorter connections on mobile, longer on desktop
+  const spacing = isMobile ? 20.00 : 30.00; // Closer spacing on mobile, wider on desktop
+  const scaleMobile = 1.00;
 
   useEffect(() => {
     let effect: any = null;
@@ -42,7 +53,7 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({ className = '' }) => 
         effect = VANTA.default({
           el: vantaRef.current,
           // THREE is automatically picked up from window by Vanta script
-          color: 0x14b8a6, // Teal-500
+          color: 0x94f3e4, // Much lighter teal (teal-200) for less interference
           backgroundColor: 0xffffff, // White
           points: points,
           maxDistance: maxDistance,
@@ -54,6 +65,7 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({ className = '' }) => 
           minWidth: 200.00,
           scale: 1.00,
           scaleMobile: scaleMobile,
+          opacity: 0.3, // Reduced opacity for less visual interference
         });
         setVantaEffect(effect);
       }
@@ -75,7 +87,14 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({ className = '' }) => 
     <div
       ref={vantaRef}
       className={`vanta-container ${className}`}
-      style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
+      style={{ 
+        width: '100vw', 
+        height: '100vh', 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        zIndex: -1 // Ensure it stays behind all content
+      }}
     >
       {/* Vanta.js will attach its canvas here */}
     </div>

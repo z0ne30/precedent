@@ -1,141 +1,155 @@
-'use client'; // Keep as client component for Cal pop-up initialization
+'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react'; // Import useState
-import { getCalApi } from "@calcom/embed-react"; // Import getCalApi
-import ContactForm from '../components/ContactForm';
-import PageLayout from '../components/PageLayout'; // Import PageLayout
-import Modal from '../components/Modal'; // Import the new Modal component
+import { useEffect, useState, FormEvent } from 'react';
+import { getCalApi } from "@calcom/embed-react";
 
 export default function ContactPage() {
-  // State to track modal status
-  const [isCalModalOpen, setIsCalModalOpen] = useState(false); // Keep for Cal.com if needed
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false); // State for Contact Form modal
+  // State for form fields
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
-  // Define colors consistent with theme
-  // Colors defined here might be less necessary if styles are centralized later
-  // const primaryTextColor = "text-gray-900"; // Use dark text for light background
-  const accentColor = "text-teal-400"; // Keep for link hover
-  const buttonBgColor = "bg-teal-500"; // Keep for button, or move to globals.css
-  const buttonHoverBgColor = "hover:bg-teal-600"; // Keep for button, or move to globals.css
-  const buttonTextColor = "text-white"; // Keep for button, or move to globals.css
-  // Initialize Cal.com embed UI settings and add callbacks
+  // State for submission status and feedback
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+
+  // Initialize Cal.com embed
   useEffect(() => {
-    let isMounted = true; // Flag to prevent state updates on unmounted component
-    let cal: any = null; // Variable to hold the cal instance for cleanup
-
-    // Define callback functions
-    const handleModalOpen = () => {
-      console.log("DEBUG: handleModalOpen triggered!"); // <-- ADDED DEBUG LOG
-      if (isMounted) setIsCalModalOpen(true);
-      document.body.classList.add('cal-modal-open');
-      console.log("DEBUG: Added 'cal-modal-open' class to body."); // <-- ADDED DEBUG LOG
-    };
-
-    const handleModalClose = () => {
-      console.log("DEBUG: handleModalClose triggered!"); // <-- ADDED DEBUG LOG
-      if (isMounted) setIsCalModalOpen(false);
-      // Use requestAnimationFrame to delay removal slightly
-      requestAnimationFrame(() => {
-          document.body.classList.remove('cal-modal-open');
-          console.log("DEBUG: Removed 'cal-modal-open' class from body."); // <-- ADDED DEBUG LOG
-      });
-    };
-
     (async function () {
       try {
-        cal = await getCalApi(); // Assign to outer scope variable
-        console.log("DEBUG: Cal API object obtained:", cal); // <-- ADDED DEBUG LOG
-        if (!isMounted || !cal) return; // Check before using cal
-
-        // Configure UI (without callbacks)
+        const cal = await getCalApi();
         cal("ui", {
           theme: "light",
-          styles: { branding: { brandColor: "#2DD4BF" } },
+          styles: { branding: { brandColor: "#14b8a6" } },
           hideEventTypeDetails: false,
         });
-
-        // Attempt to attach event listeners using .on() pattern
-        console.log("DEBUG: Attempting to attach listeners using cal.on?. ..."); // <-- ADDED DEBUG LOG
-        if (typeof cal.on === 'function') {
-            console.log("DEBUG: cal.on method exists."); // <-- ADDED DEBUG LOG
-            cal.on('modalOpen', handleModalOpen);
-            cal.on('modalClose', handleModalClose);
-            console.log("DEBUG: Attached listeners via cal.on."); // <-- ADDED DEBUG LOG
-        } else {
-            console.warn("DEBUG: cal.on method does not exist on Cal API object."); // <-- ADDED DEBUG LOG
-            // Fallback or alternative method might be needed here if events don't fire.
-        }
-
       } catch (error) {
-          console.error("Failed to initialize Cal.com API:", error);
+        console.error("Failed to initialize Cal.com API:", error);
       }
     })();
+  }, []);
 
-    // Cleanup function
-    return () => {
-      isMounted = false;
-      // Attempt to remove listeners using .off() pattern
-      try {
-        if (typeof cal?.off === 'function') {
-            console.log("DEBUG: Attempting to remove listeners via cal.off?. ..."); // <-- ADDED DEBUG LOG
-            cal.off('modalOpen', handleModalOpen);
-            cal.off('modalClose', handleModalClose);
-            console.log("DEBUG: Removed listeners via cal.off."); // <-- ADDED DEBUG LOG
-        } else {
-            console.warn("DEBUG: cal.off method does not exist."); // <-- ADDED DEBUG LOG
-        }
-      } catch (error) {
-        console.warn("Could not remove Cal.com listeners:", error);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatus('loading');
+    setFeedbackMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setFeedbackMessage(result.message || 'Submission successful!');
+        setName('');
+        setEmail('');
+        setMessage('');
+      } else {
+        setStatus('error');
+        setFeedbackMessage(result.error || 'An error occurred during submission.');
       }
-      // Ensure class is removed if component unmounts while modal is open
-      document.body.classList.remove('cal-modal-open');
-    };
-  }, []); // Empty dependency array ensures this runs once on mount
+    } catch (error) {
+      console.error('Contact form submission error:', error);
+      setStatus('error');
+      setFeedbackMessage('Failed to send message. Please try again later.');
+    }
+  };
 
   return (
-    <> {/* Add React Fragment wrapper */}
-      {/* Use PageLayout, passing the title */}
-    <PageLayout title="Get In Touch">
-      {/* Removed outer divs and h1, PageLayout handles container and title */}
-        {/* Button to open Contact Form Modal */}
-        <div className="text-center mb-8"> {/* Add margin bottom */}
+    <div className="relative min-h-screen flex flex-col items-center justify-center text-gray-900 p-8">
+      {/* Main Content */}
+      <div className="z-10 w-full max-w-2xl text-center space-y-8">
+        {/* Cal.com Booking Button */}
+        <div className="mb-8 w-full max-w-md mx-auto">
           <button
-            data-cursor-magnetic // Add magnetic effect
-            onClick={() => setIsContactModalOpen(true)}
-            // Apply standardized button classes, maybe secondary style?
-            className="btn btn-primary inline-block" // Changed to primary style
-          >
-            Send me a message
-          </button>
-        </div>
-
-        {/* Centered Cal.com Booking Button Container */}
-        <div className="text-center mb-12"> {/* Add margin bottom */}
-          <button
-            data-cursor-magnetic // Add magnetic effect
             data-cal-link="enyu-rao"
-            data-cal-config='{"theme":"light"}' // Ensure theme consistency
-            // Apply standardized button classes, keep inline-block for centering
-            className="btn btn-primary inline-block"
+            data-cal-config='{"theme":"light"}'
+            className="w-full px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium"
           >
-            Let's chat :)
+            Book a meeting :)
           </button>
         </div>
 
-        {/* Removed "Back to Home" link as Header provides navigation */}
-      {/* Removed closing divs for outer containers */}
-    </PageLayout>
+        {/* Contact Form - Always Visible */}
+        <div className="w-full max-w-md mx-auto bg-white p-6 md:p-8 rounded-lg shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Name"
+                  className="form-input"
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email"
+                  className="form-input"
+                />
+              </div>
+              <div>
+                <textarea
+                  name="message"
+                  id="message"
+                  rows={4}
+                  required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Got a rec or just want to say hi?"
+                  className="form-input"
+                ></textarea>
+              </div>
+              <div>
+                <button
+                  data-cursor-magnetic
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="btn btn-primary w-full"
+                >
+                  {status === 'loading' ? 'Sending...' : 'Send'}
+                </button>
+              </div>
+              <div className="mt-4 h-5">
+                <p
+                  className={`text-sm text-center transition-opacity duration-300 ease-in-out ${
+                    status === 'success' ? 'text-green-600' : 'text-red-600'
+                  } ${feedbackMessage ? 'opacity-100' : 'opacity-0'}`}
+                  aria-live="polite"
+                >
+                  {feedbackMessage || '\u00A0'}
+                </p>
+              </div>
+          </form>
+        </div>
 
-    {/* Contact Form Modal */}
-    <Modal
-      isOpen={isContactModalOpen}
-      onClose={() => setIsContactModalOpen(false)}
-      title="Send a Message"
-    >
-
-      <ContactForm />
-    </Modal>
-   </> 
- );
+        {/* Back to Home */}
+        <div className="mt-12">
+          <Link 
+            href="/" 
+            className="text-teal-600 hover:text-teal-700 underline decoration-2 underline-offset-4 transition-colors duration-200"
+          >
+            ← Back to Home
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
