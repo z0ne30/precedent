@@ -81,15 +81,15 @@ export default function Home() {
           </p>
           
           <p className="text-base leading-relaxed">
-            <em>first</em> under Wushan(巫山)&apos;s mist-veiled peaks,
+            <em>first, under Wushan(巫山)&apos;s mist-veiled peaks,</em> 
           </p>
           
           <p className="text-base leading-relaxed">
-            <em>again</em> in 2011 after crossing an ocean and an entire continent to the States
+            <em>again, after crossing an ocean and an entire continent to the States</em> 
           </p>
           
           <p className="text-base leading-relaxed">
-            <em>and then</em> in 2016, carving a thirty-day line across the Continental Divide.
+            <em>and then, carving a thirty-day line across the Continental Divide.</em> 
           </p>
           
           <p className="text-base leading-relaxed mt-8 font-bold">
