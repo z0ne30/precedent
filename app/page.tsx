@@ -81,7 +81,7 @@ export default function Home() {
           </p>
           
           <p className="text-base leading-relaxed">
-            <em>first</em> in 2000 under Wushan(巫山)'s mist-veiled peaks,
+            <em>first</em> under Wushan(巫山)&apos;s mist-veiled peaks,
           </p>
           
           <p className="text-base leading-relaxed">
@@ -111,15 +111,15 @@ export default function Home() {
         {/* More bio content */}
         <motion.div className="space-y-6 text-left max-w-3xl mx-auto" variants={itemVariants}>
           <p className="text-base leading-relaxed">
-            I court stubborn riddles—code that bites back, communities that need kindling, ideas that wear a size too large. Since childhood I've wrestled them into shape.
+            I court stubborn riddles—code that bites back, communities that need kindling, ideas that wear a size too large. Since childhood I&apos;ve wrestled them into shape.
           </p>
           
           <p className="text-base leading-relaxed">
-            <strong>"Why not?"</strong> usually beats <strong>"Why?"</strong> in my playbook.
+            <strong>&quot;Why not?&quot;</strong> usually beats <strong>&quot;Why?&quot;</strong> in my playbook.
           </p>
           
           <p className="text-base leading-relaxed mt-8">
-            I live on good music, stories, company—<em>and if they don't dance, well, they're no friends of mine.</em>
+            I live on good music, stories, company—<em>and if they don&apos;t dance, well, they&apos;re no friends of mine.</em>
           </p>
         </motion.div>
 
