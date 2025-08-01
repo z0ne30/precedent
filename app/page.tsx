@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ssr: false });
+const ImageCarousel = dynamic(() => import('./components/ImageCarousel'), { ssr: false });
 
 export default function Home() {
   const subtitles = [
@@ -11,6 +12,19 @@ export default function Home() {
     "| chaser of uphill problems",
     "| half-baked dev",
     "| el padrón of launch yard",
+  ];
+
+  // Gallery images from public/images/gallery/
+  const galleryImages = [
+    "/images/gallery/IMG_0042.jpeg",
+    "/images/gallery/IMG_1021.JPG",
+    "/images/gallery/IMG_24762889ED43-1.jpeg",
+    "/images/gallery/IMG_4622.JPG",
+    "/images/gallery/IMG_4AD58C67FF41-1.jpeg",
+    "/images/gallery/IMG_8850A80FF71E-1.jpeg",
+    "/images/gallery/IMG_BEDD9C9B5774-1.jpeg",
+    "/images/gallery/JPEG image.jpeg",
+    "/images/gallery/launchyard.3.27.25.svb.aa-11.jpg",
   ];
   const primaryTextColor = "text-gray-900";
   const accentColor = "text-teal-400";
@@ -81,12 +95,15 @@ export default function Home() {
           </p>
         </motion.div>
 
-        {/* Image carousel placeholder */}
+        {/* Image carousel */}
         <motion.div 
-          className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500 my-12"
+          className="w-full max-w-3xl mx-auto my-12"
           variants={itemVariants}
         >
-          [image carousel]
+          <ImageCarousel 
+            images={galleryImages}
+            className="shadow-lg"
+          />
         </motion.div>
 
         {/* More bio content */}
