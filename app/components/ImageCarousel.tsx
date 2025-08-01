@@ -34,9 +34,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images, className = '' })
   }
 
   return (
-    <div className={`relative w-full h-80 md:h-96 lg:h-[500px] rounded-lg overflow-hidden bg-gray-50 ${className}`}>
+    <div className={`relative w-full h-80 md:h-96 lg:h-[500px] ${className}`}>
       {/* Main Image Display */}
-      <div className="relative w-full h-full p-4">
+      <div className="relative w-full h-full">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -44,7 +44,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images, className = '' })
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-4"
+            className="absolute inset-0"
           >
             <Image
               src={images[currentIndex]}
@@ -57,14 +57,6 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images, className = '' })
           </motion.div>
         </AnimatePresence>
       </div>
-
-
-      {/* Image Counter */}
-      {images.length > 1 && (
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-2 py-1 rounded text-sm">
-          {currentIndex + 1} / {images.length}
-        </div>
-      )}
     </div>
   );
 };
