@@ -25,6 +25,8 @@ export default function Home() {
     "/images/gallery/IMG_BEDD9C9B5774-1.jpeg",
     "/images/gallery/JPEG image.jpeg",
     "/images/gallery/launchyard.3.27.25.svb.aa-11.jpg",
+    "/images/gallery/image.png",
+    "/images/gallery/image1.png",
   ];
   const primaryTextColor = "text-gray-900";
   const accentColor = "text-teal-400";
