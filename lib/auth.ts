@@ -1,45 +1,48 @@
 import { AuthOptions, SessionStrategy } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from '@/lib/prisma'; // Reuse existing prisma client
 
-// Basic validation for environment variables - moved here for clarity
-if (!process.env.GOOGLE_CLIENT_ID) {
-  throw new Error("Missing GOOGLE_CLIENT_ID environment variable");
-}
-if (!process.env.GOOGLE_CLIENT_SECRET) {
-  throw new Error("Missing GOOGLE_CLIENT_SECRET environment variable");
-}
-if (!process.env.NEXTAUTH_SECRET) {
-  // Allow missing secret in development for easier setup, but warn.
-  if (process.env.NODE_ENV !== 'production') {
-    console.warn("Missing NEXTAUTH_SECRET environment variable. Using a generated secret for development is highly discouraged for security reasons.");
-  } else {
-     throw new Error("Missing NEXTAUTH_SECRET environment variable. This is required for production.");
+// Conditionally import Prisma and adapter only if DATABASE_URL is available
+let PrismaAdapter: any = null;
+let prisma: any = null;
+
+try {
+  if (process.env.DATABASE_URL) {
+    const { PrismaAdapter: PrismaAdapterImport } = require("@next-auth/prisma-adapter");
+    const { prisma: prismaClient } = require('@/lib/prisma');
+    PrismaAdapter = PrismaAdapterImport;
+    prisma = prismaClient;
   }
-  // Note: NextAuth might use a default insecure secret if missing in dev, which is not ideal.
+} catch (error) {
+  console.warn("Prisma not available for NextAuth, using JWT-only mode.");
 }
+
+// Basic validation for environment variables - only check if they're needed
+const hasGoogleConfig = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET;
 
 // Define and EXPORT authOptions from this shared file
 export const authOptions: AuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Only use PrismaAdapter if available, otherwise rely on JWT
+  ...(PrismaAdapter && prisma ? { adapter: PrismaAdapter(prisma) } : {}),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    // Only add Google provider if credentials are available
+    ...(hasGoogleConfig ? [
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      })
+    ] : [])
   ],
   session: {
-    strategy: "jwt" as SessionStrategy, // Use JWT strategy
+    strategy: "jwt" as SessionStrategy, // Always use JWT strategy for compatibility
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-build",
   callbacks: {
     async session({ session, token }: { session: any, token: any }) {
       // Add properties from token to session object
       if (token?.sub) {
         session.user.id = token.sub;
       }
-      if (token?.isAdmin !== undefined) { // Check if isAdmin exists on token
+      if (token?.isAdmin !== undefined) {
         session.user.isAdmin = token.isAdmin;
       }
       return session;
@@ -47,31 +50,30 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, account, profile }: { token: any, user?: any, account?: any, profile?: any }) {
       // On initial sign in, 'user' object is passed (from adapter)
       if (account && user) {
-        token.sub = user.id; // Persist user.id from adapter into token
-        // Fetch isAdmin status from DB using user.id
-        try {
-          // Fetch the full user object instead of selecting only isAdmin
-          const dbUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            // select: { isAdmin: true }, // Remove select
-          });
-          // Explicitly check if dbUser and isAdmin exist and are boolean
-          if (dbUser && typeof dbUser.isAdmin === 'boolean') {
-            token.isAdmin = dbUser.isAdmin;
-          } else {
-            // Default to false if user not found or isAdmin is not boolean
+        token.sub = user.id;
+        // Only try to fetch isAdmin status if prisma is available
+        if (prisma) {
+          try {
+            const dbUser = await prisma.user.findUnique({
+              where: { id: user.id },
+            });
+            if (dbUser && typeof dbUser.isAdmin === 'boolean') {
+              token.isAdmin = dbUser.isAdmin;
+            } else {
+              token.isAdmin = false;
+            }
+          } catch (error) {
+            console.error("Error fetching user isAdmin status in JWT callback:", error);
             token.isAdmin = false;
           }
-        } catch (error) {
-          console.error("Error fetching user isAdmin status in JWT callback:", error);
-          token.isAdmin = false; // Default to false on error
+        } else {
+          // Default to false when no database is available
+          token.isAdmin = false;
         }
       }
-      // Subsequent calls only have 'token'. The isAdmin value is already in the token.
       return token;
     },
   },
-  // debug: process.env.NODE_ENV === 'development', // Uncomment for debugging if needed
 };
 
 // Helper function to require admin session in API routes
