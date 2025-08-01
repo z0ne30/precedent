@@ -1,7 +1,17 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend'; // Import Resend
 import { z } from 'zod'; // Import Zod
+
+// Conditionally import Prisma only if DATABASE_URL is available
+let prisma: any = null;
+try {
+  if (process.env.DATABASE_URL) {
+    const { prisma: prismaClient } = require('@/lib/prisma');
+    prisma = prismaClient;
+  }
+} catch (error) {
+  console.warn("Prisma not available, database operations will be disabled.");
+}
 
 // Initialize Resend client
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -36,15 +46,25 @@ export async function POST(request: Request) {
     const validatedData: ContactFormData = validationResult.data;
 
     // --- Save to database ---
-    const submission = await prisma.contactSubmission.create({
-      data: {
-        // Use validated data (already trimmed by schema)
-        name: validatedData.name,
-        email: validatedData.email,
-        message: validatedData.message,
-      },
-    });
-    console.log("Contact submission saved:", submission.id);
+    let submission = null;
+    if (prisma) {
+      try {
+        submission = await prisma.contactSubmission.create({
+          data: {
+            // Use validated data (already trimmed by schema)
+            name: validatedData.name,
+            email: validatedData.email,
+            message: validatedData.message,
+          },
+        });
+        console.log("Contact submission saved:", submission.id);
+      } catch (dbError) {
+        console.error("Database save failed:", dbError);
+        // Continue with email sending even if database save fails
+      }
+    } else {
+      console.log("Database not available, skipping submission save.");
+    }
 
     // --- Send Emails ---
     if (resend) { // Only attempt if Resend client is initialized
