@@ -9,7 +9,7 @@ const ImageCarousel = dynamic(() => import('./components/ImageCarousel'), { ssr:
 export default function Home() {
   const subtitles = [
     "| magician @ orbit",
-    "| chaser of uphill problems",
+    "| chaser of uphill problems", 
     "| half-baked dev",
     "| el padrón of launch yard",
   ];
@@ -52,19 +52,19 @@ export default function Home() {
   };
 
   return (
-    <div className={`relative flex min-h-screen flex-col ${primaryTextColor} p-8 overflow-hidden`}>
+    <main className={`relative flex min-h-screen flex-col ${primaryTextColor} p-8 overflow-hidden`}>
       {/* Main Content Area */}
-      <motion.div
+      <motion.article
         className="z-10 w-full max-w-4xl mx-auto mt-16 space-y-8"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Name and Scrambling text on same line */}
-        <motion.div className="flex flex-row items-baseline gap-2 md:gap-4 max-w-3xl mx-auto" variants={itemVariants}>
-          <div className={`text-2xl md:text-3xl font-bold ${accentColor}`}>
+        <motion.header className="flex flex-row items-baseline gap-2 md:gap-4 max-w-3xl mx-auto" variants={itemVariants}>
+          <h1 className={`text-2xl md:text-3xl font-bold ${accentColor}`}>
             Enyu Rao
-          </div>
+          </h1>
           <div className="whitespace-nowrap">
             <ScramblingText
               texts={subtitles}
@@ -72,7 +72,7 @@ export default function Home() {
               className="text-lg text-gray-600 font-serif"
             />
           </div>
-        </motion.div>
+        </motion.header>
 
         {/* Bio content */}
         <motion.div className="space-y-6 text-left max-w-3xl mx-auto" variants={itemVariants}>
@@ -134,7 +134,7 @@ export default function Home() {
           <span className="text-base text-gray-600 ml-2">& send me a book/song rec!</span>
         </motion.div>
 
-      </motion.div>
-    </div>
+      </motion.article>
+    </main>
   );
 }
