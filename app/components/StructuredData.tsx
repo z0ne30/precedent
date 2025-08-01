@@ -7,49 +7,54 @@ export default function StructuredData() {
     "name": "Enyu Rao",
     "givenName": "Enyu",
     "familyName": "Rao",
-    "url": "https://vibetest.vercel.app/",
+    "url": "https://enyurao.com/",
     "sameAs": [
-      // Add your social media profiles here
+      "https://enyurao.xyz/",
       "https://github.com/z0ne30",
       "https://linkedin.com/in/enyurao",
       "https://twitter.com/enyurao"
     ],
-    "jobTitle": "Software Engineer",
+    "jobTitle": ["Chief of Staff", "Founder"],
     "worksFor": [
       {
         "@type": "Organization",
-        "name": "Orbit"
+        "name": "Orbit",
+        "jobTitle": "Chief of Staff"
       },
       {
         "@type": "Organization", 
-        "name": "Launch Yard"
+        "name": "Launch Yard",
+        "jobTitle": "Founder"
       }
     ],
-    "alumniOf": {
-      "@type": "EducationalOrganization",
-      "name": "Your University" // Update with your actual education
-    },
-    "birthPlace": {
-      "@type": "Place",
-      "name": "Wushan, China"
-    },
-    "nationality": "Chinese-American",
-    "description": "Software engineer and entrepreneur. Born under Wushan's peaks, crossed continents, carved paths across the Continental Divide. Magician at Orbit, chaser of uphill problems, el padrón of Launch Yard.",
-    "knowsAbout": [
-      "Software Engineering",
-      "Web Development", 
-      "Entrepreneurship",
-      "Mountain Climbing",
-      "Continental Divide Trail"
-    ],
-    "hasOccupation": {
-      "@type": "Occupation",
-      "name": "Software Engineer",
-      "occupationLocation": {
-        "@type": "Place",
-        "name": "United States"
+    "alumniOf": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "Babson College"
+      },
+      {
+        "@type": "EducationalOrganization",
+        "name": "University of St.Gallen"
       }
-    }
+    ],
+    "hasOccupation": [
+      {
+        "@type": "Occupation",
+        "name": "Chief of Staff at Orbit",
+        "occupationLocation": {
+          "@type": "Place",
+          "name": "United States"
+        }
+      },
+      {
+        "@type": "Occupation",
+        "name": "Founder of Launch Yard",
+        "occupationLocation": {
+          "@type": "Place",
+          "name": "United States"
+        }
+      }
+    ]
   };
 
   return (

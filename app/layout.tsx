@@ -7,38 +7,34 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import ClientLayout from './components/ClientLayout';
 import StructuredData from './components/StructuredData';
 export const metadata = {
-  title: "Enyu Rao - Personal Website & Portfolio",
-  description: "Enyu Rao's personal website. Born under Wushan's peaks, crossed continents, carved paths across the Continental Divide. Magician at Orbit, chaser of uphill problems, el padrón of Launch Yard.",
-  metadataBase: new URL("https://vibetest.vercel.app/"),
+  title: "Enyu Rao - digital garden",
+  description: "some cool things i'm up to.",
+  metadataBase: new URL("https://enyurao.com/"),
   keywords: [
     "Enyu Rao",
     "Enyu",
     "Rao",
     "personal website",
     "portfolio",
-    "developer",
     "Launch Yard",
     "Orbit",
-    "Continental Divide",
-    "Wushan",
-    "software engineer",
-    "entrepreneur"
+    "founder"
   ],
   authors: [{ name: "Enyu Rao" }],
   creator: "Enyu Rao",
   publisher: "Enyu Rao",
   openGraph: {
-    title: "Enyu Rao - Personal Website & Portfolio",
-    description: "Enyu Rao's personal website. Born under Wushan's peaks, crossed continents, carved paths across the Continental Divide. Magician at Orbit, chaser of uphill problems, el padrón of Launch Yard.",
-    url: "https://vibetest.vercel.app/",
+    title: "Enyu Rao - digital garden",
+    description: "some cool things i'm up to.",
+    url: "https://enyurao.com/",
     siteName: "Enyu Rao",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Enyu Rao - Personal Website & Portfolio",
-    description: "Enyu Rao's personal website. Born under Wushan's peaks, crossed continents, carved paths across the Continental Divide.",
+    title: "Enyu Rao - digital garden",
+    description: "some cool things i'm up to.",
     creator: "@enyurao",
   },
   robots: {
