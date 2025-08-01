@@ -7,7 +7,9 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma migrate deploy && prisma generate && next build",
+    "build": "if [ -n \"$DATABASE_URL\" ]; then prisma migrate deploy && prisma generate; fi && next build",
+    "build:vercel": "next build",
+    "postinstall": "if [ -n \"$DATABASE_URL\" ]; then prisma generate; fi",
     "format:write": "prettier --write \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "format": "prettier \"**/*.{css,js,json,jsx,ts,tsx}\"",
     "start": "next start",
