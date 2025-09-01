@@ -39,7 +39,12 @@ const nextConfig = {
     return [
       {
         source: "/github",
-        destination: "https://github.com/steven-tey/precedent",
+        destination: "https://github.com/z0ne30",
+        permanent: false,
+      },
+      {
+        source: "/linkedin",
+        destination: "https://www.linkedin.com/in/enyu-rao/",
         permanent: false,
       },
     ];
