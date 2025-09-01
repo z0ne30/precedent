@@ -47,6 +47,21 @@ const nextConfig = {
         destination: "https://www.linkedin.com/in/enyu-rao/",
         permanent: false,
       },
+      {
+        source: "/x",
+        destination: "https://x.com/0xhappier?s=21",
+        permanent: false,
+      },
+      {
+        source: "/launchyard",
+        destination: "https://launchyard.xyz/",
+        permanent: false,
+      },
+      {
+        source: "/orbit",
+        destination: "https://www.orbit.engineering/",
+        permanent: false,
+      },
     ];
   },
 };
