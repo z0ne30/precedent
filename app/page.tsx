@@ -16,7 +16,8 @@ export default function Home() {
 
   // Gallery images from public/images/gallery/
   const galleryImages = [
-    "/images/gallery/IMG_0042.jpeg",
+    "/images/gallery/27DE5FD2-00EB-47B2-93B4-25919DC4E559.png",
+    "/images/gallery/DC9E6E81-113A-48A8-A0F4-96506D824164_1_105_c.jpeg",
     "/images/gallery/IMG_1021.JPG",
     "/images/gallery/IMG_24762889ED43-1.jpeg",
     "/images/gallery/IMG_4622.JPG",
@@ -24,7 +25,6 @@ export default function Home() {
     "/images/gallery/IMG_8850A80FF71E-1.jpeg",
     "/images/gallery/IMG_BEDD9C9B5774-1.jpeg",
     "/images/gallery/JPEG image.jpeg",
-    "/images/gallery/launchyard.3.27.25.svb.aa-11.jpg",
     "/images/gallery/image.png",
     "/images/gallery/image1.png",
   ];
