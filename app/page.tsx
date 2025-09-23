@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
 const ScramblingText = dynamic(() => import('./components/ScramblingText'), { ssr: false });
 const ImageCarousel = dynamic(() => import('./components/ImageCarousel'), { ssr: false });
 
@@ -17,17 +18,38 @@ export default function Home() {
   // Gallery images from public/images/gallery/
   const galleryImages = [
     "/images/gallery/27DE5FD2-00EB-47B2-93B4-25919DC4E559.png",
+    "/images/gallery/77015989212__7D8E3BCE-E1E6-4670-90AC-3282418CCB26.jpg",
     "/images/gallery/DC9E6E81-113A-48A8-A0F4-96506D824164_1_105_c.jpeg",
-    "/images/gallery/IMG_1021.JPG",
-    "/images/gallery/IMG_24762889ED43-1.jpeg",
-    "/images/gallery/IMG_4622.JPG",
-    "/images/gallery/IMG_4AD58C67FF41-1.jpeg",
-    "/images/gallery/IMG_8850A80FF71E-1.jpeg",
-    "/images/gallery/IMG_BEDD9C9B5774-1.jpeg",
-    "/images/gallery/JPEG image.jpeg",
     "/images/gallery/image.png",
     "/images/gallery/image1.png",
+    "/images/gallery/IMG_4AD58C67FF41-1.jpeg",
+    "/images/gallery/IMG_0985.jpg",
+    "/images/gallery/IMG_1021.JPG",
+    "/images/gallery/IMG_1041.jpg",
+    "/images/gallery/IMG_4622.JPG",
+    "/images/gallery/IMG_8850A80FF71E-1.jpeg",
+    "/images/gallery/IMG_24762889ED43-1.jpeg",
+    "/images/gallery/IMG_BEDD9C9B5774-1.jpeg",
+    "/images/gallery/JPEG image.jpeg",
   ];
+
+  // State for shuffled images
+  const [shuffledImages, setShuffledImages] = useState<string[]>([]);
+
+  // Fisher-Yates shuffle algorithm
+  const shuffleArray = (array: string[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Shuffle images on component mount
+  useEffect(() => {
+    setShuffledImages(shuffleArray(galleryImages));
+  }, []);
   const primaryTextColor = "text-gray-900";
   const accentColor = "text-teal-400";
 
@@ -102,10 +124,12 @@ export default function Home() {
           className="w-full max-w-3xl mx-auto my-12"
           variants={itemVariants}
         >
-          <ImageCarousel 
-            images={galleryImages}
-            className="shadow-lg"
-          />
+          {shuffledImages.length > 0 && (
+            <ImageCarousel 
+              images={shuffledImages}
+              className="shadow-lg"
+            />
+          )}
         </motion.div>
 
         {/* More bio content */}
