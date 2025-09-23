@@ -146,7 +146,7 @@ export default function ContactPage() {
             href="/" 
             className="text-teal-600 hover:text-teal-700 underline decoration-2 underline-offset-4 transition-colors duration-200"
           >
-            ← Back to Home
+            ← Back
           </Link>
         </div>
       </div>
